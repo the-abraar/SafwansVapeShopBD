@@ -336,10 +336,27 @@
         grid.innerHTML = '';
 
         products.forEach(p => {
+            const isOutOfStock = p.inStock === false;
             const card = document.createElement('div');
-            card.className = 'product-card';
+            card.className = `product-card ${isOutOfStock ? 'out-of-stock' : ''}`;
 
             const specsHtml = (p.specs || []).map(s => `<span class="spec-pill">${escapeHTML(s)}</span>`).join('');
+
+            const stockTagHtml = isOutOfStock
+                ? `<div class="product-stock-tag out-of-stock">
+                        <i class="fa-solid fa-ban"></i> স্টক আউট / Out of Stock
+                   </div>`
+                : `<div class="product-stock-tag">
+                        <i class="fa-solid fa-check"></i> In Stock
+                   </div>`;
+
+            const buttonHtml = isOutOfStock
+                ? `<button class="add-btn" data-id="${p.id}" disabled aria-disabled="true">
+                        <i class="fa-solid fa-ban"></i> স্টক শেষ / Stock Out
+                   </button>`
+                : `<button class="add-btn" data-id="${p.id}">
+                        <i class="fa-solid fa-plus"></i> Add to Bag
+                   </button>`;
 
             card.innerHTML = `
                 <div class="product-art-container" style="background: ${p.bgGradient || 'rgba(255,255,255,0.02)'};">
@@ -349,9 +366,7 @@
                     <div class="product-svg-art">
                         ${getProductSvg(p.svgType, p.color)}
                     </div>
-                    <div class="product-stock-tag">
-                        <i class="fa-solid fa-check"></i> In Stock
-                    </div>
+                    ${stockTagHtml}
                 </div>
                 <div class="product-body">
                     <span class="product-cat">${escapeHTML(p.category)}</span>
@@ -362,16 +377,16 @@
                         <div class="product-price">
                             ${formatBDT(p.price)} <small>BDT</small>
                         </div>
-                        <button class="add-btn" data-id="${p.id}">
-                            <i class="fa-solid fa-plus"></i> Add to Bag
-                        </button>
+                        ${buttonHtml}
                     </div>
                 </div>
             `;
 
             // Event listener for Add Button
             const addBtn = card.querySelector('.add-btn');
-            addBtn.addEventListener('click', () => addToCart(p.id));
+            if (addBtn && !isOutOfStock) {
+                addBtn.addEventListener('click', () => addToCart(p.id));
+            }
 
             grid.appendChild(card);
         });
@@ -383,6 +398,12 @@
     function addToCart(id) {
         const p = products.find(x => x.id === id);
         if (!p) return;
+
+        // Out of Stock Guard (Issue 2.6)
+        if (p.inStock === false) {
+            showToast('Sorry, this item is currently out of stock.', 'error');
+            return;
+        }
 
         const existing = cart.find(x => x.id === id);
         if (existing) {
@@ -642,6 +663,11 @@
             dueOnDelivery = 0;
         }
 
+        // Pathao 1% COD Fee & Net Merchant Payout Calculation (Issue 2.5)
+        const codRate = (window.CONFIG && window.CONFIG.pathaoCodFeeRate) || 0.01;
+        const codFee = Math.round(dueOnDelivery * codRate);
+        const netMerchantPayout = dueOnDelivery - codFee;
+
         // Update breakdown elements
         const subtotalEl = document.getElementById('calc-subtotal');
         const deliveryEl = document.getElementById('calc-delivery');
@@ -662,7 +688,9 @@
             deliveryFee,
             grandTotal,
             advancePayable,
-            dueOnDelivery
+            dueOnDelivery,
+            codFee,
+            netMerchantPayout
         };
     }
 
@@ -678,10 +706,18 @@
         renderPaymentOptions();
         recalculateCheckoutTotals();
 
-        // Populate bKash Number in display
+        // Populate bKash Number in display & Check placeholder guard (Issue 2.3)
         const bkashNumEl = document.getElementById('bkash-number-display');
+        const bkashWarningEl = document.getElementById('bkash-warning-banner');
+        const isPlaceholder = window.CONFIG && (typeof window.CONFIG.isBkashPlaceholder === 'function'
+            ? window.CONFIG.isBkashPlaceholder()
+            : /xx/i.test(window.CONFIG.bkashNumber || ''));
+
         if (bkashNumEl && window.CONFIG) {
             bkashNumEl.textContent = window.CONFIG.bkashNumber || '017XX-XXXXXX';
+        }
+        if (bkashWarningEl) {
+            bkashWarningEl.style.display = isPlaceholder ? 'flex' : 'none';
         }
 
         const modal = document.getElementById('checkout-modal');
@@ -786,7 +822,11 @@
             msg += `bKash Number: ${window.CONFIG.bkashNumber}\n`;
         }
         if (pricing.dueOnDelivery > 0) {
-            msg += `🤝 *Cash on Delivery (COD) Due:* ${formatBDT(pricing.dueOnDelivery)}\n`;
+            msg += `🤝 *Cash on Delivery (COD) Due:* ${formatBDT(pricing.dueOnDelivery)}`;
+            if (pricing.codFee > 0) {
+                msg += ` _(Pathao COD Collection fee: ${formatBDT(pricing.codFee)} deducted on merchant payout)_`;
+            }
+            msg += `\n`;
         }
         
         msg += `\n*Note:* এই মেসেজের সাথে bKash Send Money এর TrxID অথবা স্ক্রিনশট অ্যাটাচ করে পাঠান।`;
@@ -808,12 +848,48 @@
             delivery: currentSelectedDelivery,
             payment: currentSelectedPayment,
             pricing,
-            whatsappUrl: waUrl
+            whatsappUrl: waUrl,
+            webhookStatus: 'unconfigured'
         };
 
         lastGeneratedOrder = orderRecord;
 
-        // Persist order in local ledger (Roadmap 4)
+        // CRITICAL BUG FIX (Issue 3.3):
+        // Immediately launch WhatsApp window on user gesture to avoid mobile popup blockers!
+        window.open(waUrl, '_blank');
+
+        // Asynchronous webhook dispatch with AbortController 5000ms timeout (Issue 2.2)
+        let webhookStatus = 'unconfigured';
+        if (window.CONFIG && window.CONFIG.orderWebhookUrl) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            try {
+                fetch(window.CONFIG.orderWebhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderRecord),
+                    signal: controller.signal
+                }).then(() => {
+                    clearTimeout(timeoutId);
+                    orderRecord.webhookStatus = 'sent';
+                    updateOrderInLedger(orderRecord);
+                }).catch(err => {
+                    clearTimeout(timeoutId);
+                    orderRecord.webhookStatus = err.name === 'AbortError' ? 'timeout' : 'failed';
+                    updateOrderInLedger(orderRecord);
+                    console.warn('Order webhook request failed:', err);
+                });
+                webhookStatus = 'sent'; // Optimistically initialized, tracked via controller callback
+            } catch (e) {
+                clearTimeout(timeoutId);
+                webhookStatus = 'failed';
+                console.warn('Webhook initiation failed:', e);
+            }
+        }
+        orderRecord.webhookStatus = webhookStatus;
+
+        // Persist order in local ledger with initial status (Roadmap 4 / Issue 2.4)
         try {
             const existingOrders = JSON.parse(localStorage.getItem('sv_orders') || '[]');
             existingOrders.unshift(orderRecord);
@@ -822,28 +898,23 @@
             console.warn('Could not save to sv_orders ledger:', err);
         }
 
-        // Asynchronous webhook dispatch (Roadmap 4)
-        if (window.CONFIG.orderWebhookUrl) {
-            try {
-                fetch(window.CONFIG.orderWebhookUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderRecord)
-                }).catch(e => console.warn('Order webhook error:', e));
-            } catch (e) {
-                console.warn('Order webhook request failed:', e);
-            }
-        }
-
-        // CRITICAL BUG FIX (Issue 3.3):
-        // DO NOT WIPE CART! Attempt to open WhatsApp window.
-        // Even if browser blocks popups, we keep cart safe and show Confirmation Modal.
-        window.open(waUrl, '_blank');
-
         // Close checkout modal and show Order Confirmation modal
         closeCheckout();
         showOrderConfirmationModal(orderRecord);
+    }
+
+    // Helper to update order record in ledger when webhook status resolves
+    function updateOrderInLedger(updatedOrder) {
+        try {
+            const orders = JSON.parse(localStorage.getItem('sv_orders') || '[]');
+            const idx = orders.findIndex(o => o.id === updatedOrder.id);
+            if (idx !== -1) {
+                orders[idx] = updatedOrder;
+                localStorage.setItem('sv_orders', JSON.stringify(orders));
+            }
+        } catch (e) {
+            console.warn('Failed to update order in sv_orders ledger:', e);
+        }
     }
 
     // =========================================================================
@@ -883,7 +954,13 @@
                 <div class="order-receipt-row" style="color: var(--accent-emerald);">
                     <span>Remaining COD to Pathao:</span>
                     <strong>${formatBDT(order.pricing.dueOnDelivery)}</strong>
+                </div>
+                ${order.pricing.codFee > 0 ? `
+                <div class="order-receipt-row cod-deduct-notice" style="color: var(--text-muted); font-size: 11px;">
+                    <span>Pathao 1% COD Fee (Merchant Payout):</span>
+                    <span>-${formatBDT(order.pricing.codFee)} (Net: ${formatBDT(order.pricing.netMerchantPayout)})</span>
                 </div>` : ''}
+                ` : ''}
             `;
         }
 
@@ -914,13 +991,36 @@
     }
 
     // =========================================================================
-    // AGE VERIFICATION GATE (Issue 4.3)
+    // AGE VERIFICATION GATE HARDENING (Issue 3.2)
     // =========================================================================
     function checkAgeGate() {
-        const isVerified = localStorage.getItem('sv_age_verified') === 'true';
         const overlay = document.getElementById('age-gate-modal');
         if (!overlay) return;
 
+        // Persistent Lockout Guard (Issue 3.2)
+        const isDenied = localStorage.getItem('sv_age_denied') === 'true';
+        if (isDenied) {
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            overlay.innerHTML = `
+                <div class="age-gate-card age-denied-box">
+                    <div class="age-shield-icon age-denied-icon">
+                        <i class="fa-solid fa-ban"></i>
+                    </div>
+                    <h2>Access Denied</h2>
+                    <div class="sub-title">প্রবেশাধিকার সংরক্ষিত (18+ Policy)</div>
+                    <p style="color: var(--accent-red); font-weight: 600; margin-bottom: 12px;">
+                        Access Denied: You must be 18 or older to access this store.
+                    </p>
+                    <p class="bilingual-warning" style="margin-bottom: 0;">
+                        ১৮ বছরের কম বয়সী গ্রাহকদের জন্য এই স্টোরে প্রবেশ ও কেনাকাটা সম্পূর্ণ নিষিদ্ধ। অপ্রাপ্তবয়স্ক প্রবেশ প্রতিরোধে এই ডিভাইসের অ্যাক্সেস স্থায়ীভাবে বন্ধ করা হয়েছে।
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        const isVerified = localStorage.getItem('sv_age_verified') === 'true';
         if (!isVerified) {
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -947,19 +1047,33 @@
 
         if (underBtn) {
             underBtn.onclick = () => {
+                try {
+                    localStorage.setItem('sv_age_denied', 'true');
+                } catch (e) {
+                    console.warn(e);
+                }
                 window.location.href = 'https://www.google.com';
             };
         }
     }
 
     // =========================================================================
-    // COPY TO CLIPBOARD HELPER
+    // COPY TO CLIPBOARD HELPER (Issue 2.3: Placeholder Guard)
     // =========================================================================
     function setupCopyBkash() {
         const btn = document.getElementById('copy-bkash-btn');
         if (!btn) return;
 
         btn.addEventListener('click', () => {
+            const isPlaceholder = window.CONFIG && (typeof window.CONFIG.isBkashPlaceholder === 'function'
+                ? window.CONFIG.isBkashPlaceholder()
+                : /xx/i.test(window.CONFIG.bkashNumber || ''));
+
+            if (isPlaceholder) {
+                showToast('bKash number will be shared on WhatsApp directly!', 'info');
+                return;
+            }
+
             const number = window.CONFIG ? window.CONFIG.bkashNumber : '017XXXXXXXX';
             navigator.clipboard.writeText(number).then(() => {
                 showToast('bKash number copied to clipboard!', 'info');
@@ -970,6 +1084,231 @@
                 showToast(`Number: ${number}`, 'info');
             });
         });
+    }
+
+    // =========================================================================
+    // MERCHANT ORDER LEDGER & PATHAO BULK CSV EXPORT (Issue 2.4)
+    // =========================================================================
+    function getStoredOrders() {
+        try {
+            const data = localStorage.getItem('sv_orders');
+            return data ? JSON.parse(data) : [];
+        } catch (e) {
+            console.error('Error reading sv_orders:', e);
+            return [];
+        }
+    }
+
+    function renderLedgerUI() {
+        const orders = getStoredOrders();
+        const metricsEl = document.getElementById('ledger-metrics');
+        const wrapperEl = document.getElementById('ledger-table-wrapper');
+
+        // Metrics Calculation
+        const totalOrders = orders.length;
+        const totalGross = orders.reduce((sum, o) => sum + (o.pricing ? (o.pricing.grandTotal || 0) : 0), 0);
+        const totalCodDue = orders.reduce((sum, o) => sum + (o.pricing ? (o.pricing.dueOnDelivery || 0) : 0), 0);
+        const totalNetPayout = orders.reduce((sum, o) => {
+            if (!o.pricing) return sum;
+            const net = o.pricing.netMerchantPayout !== undefined ? o.pricing.netMerchantPayout : (o.pricing.dueOnDelivery || 0);
+            return sum + (o.pricing.advancePayable || 0) + net;
+        }, 0);
+
+        if (metricsEl) {
+            metricsEl.innerHTML = `
+                <div class="ledger-metric-card">
+                    <span class="metric-label">Total Orders</span>
+                    <strong class="metric-val">${totalOrders}</strong>
+                </div>
+                <div class="ledger-metric-card">
+                    <span class="metric-label">Gross Revenue</span>
+                    <strong class="metric-val">${formatBDT(totalGross)}</strong>
+                </div>
+                <div class="ledger-metric-card">
+                    <span class="metric-label">Pending COD</span>
+                    <strong class="metric-val" style="color: var(--accent-amber);">${formatBDT(totalCodDue)}</strong>
+                </div>
+                <div class="ledger-metric-card">
+                    <span class="metric-label">Net Merchant Payout</span>
+                    <strong class="metric-val" style="color: var(--accent-emerald);">${formatBDT(totalNetPayout)}</strong>
+                </div>
+            `;
+        }
+
+        if (wrapperEl) {
+            if (orders.length === 0) {
+                wrapperEl.innerHTML = `
+                    <div class="ledger-empty">
+                        <i class="fa-solid fa-receipt"></i>
+                        <p>এখনো কোনো অর্ডার সংরক্ষিত নেই। গ্রাহক অর্ডার কনফার্ম করলে তা এখানে রেকর্ড হবে।</p>
+                    </div>
+                `;
+            } else {
+                let rowsHtml = '';
+                orders.forEach(order => {
+                    const dateFormatted = order.timestamp
+                        ? new Date(order.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                        : 'N/A';
+                    const netPayout = order.pricing && order.pricing.netMerchantPayout !== undefined
+                        ? order.pricing.netMerchantPayout
+                        : (order.pricing ? (order.pricing.dueOnDelivery - (order.pricing.codFee || 0)) : 0);
+
+                    const statusClass = order.webhookStatus === 'sent' ? 'status-sent'
+                        : order.webhookStatus === 'timeout' ? 'status-timeout'
+                        : order.webhookStatus === 'failed' ? 'status-failed' : 'status-unconfigured';
+
+                    rowsHtml += `
+                        <tr>
+                            <td><strong style="color: var(--accent-cyan);">#${escapeHTML(order.id)}</strong></td>
+                            <td style="white-space: nowrap; font-size: 11px; color: var(--text-muted);">${escapeHTML(dateFormatted)}</td>
+                            <td>
+                                <div style="font-weight: 600;">${escapeHTML(order.customer ? order.customer.name : 'Unknown')}</div>
+                                <div style="font-size: 11px; color: var(--text-muted);">${escapeHTML(order.customer ? order.customer.phone : '')}</div>
+                            </td>
+                            <td style="max-width: 180px; font-size: 12px; line-height: 1.3;" title="${escapeHTML(order.customer ? order.customer.address : '')}">
+                                ${escapeHTML(order.customer ? order.customer.address : '')}
+                            </td>
+                            <td>
+                                <span class="ledger-badge">${escapeHTML(order.delivery ? order.delivery.name.split('(')[0] : '')}</span>
+                            </td>
+                            <td><strong>${formatBDT(order.pricing ? order.pricing.grandTotal : 0)}</strong></td>
+                            <td style="color: var(--accent-amber);">${formatBDT(order.pricing ? order.pricing.dueOnDelivery : 0)}</td>
+                            <td style="color: var(--accent-emerald);"><strong>${formatBDT(netPayout)}</strong></td>
+                            <td><span class="webhook-badge ${statusClass}">${escapeHTML(order.webhookStatus || 'unconfigured')}</span></td>
+                        </tr>
+                    `;
+                });
+
+                wrapperEl.innerHTML = `
+                    <div class="ledger-table-scroll">
+                        <table class="ledger-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Address</th>
+                                    <th>Delivery</th>
+                                    <th>Grand Total</th>
+                                    <th>COD Due</th>
+                                    <th>Net Payout</th>
+                                    <th>Webhook</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    function openLedger() {
+        renderLedgerUI();
+        const modal = document.getElementById('ledger-modal');
+        if (modal) modal.classList.add('open');
+    }
+
+    function closeLedger() {
+        const modal = document.getElementById('ledger-modal');
+        if (modal) modal.classList.remove('open');
+        if (window.location.hash === '#ledger' || window.location.hash === '#admin') {
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+    }
+
+    function escapeCSV(val) {
+        if (val === null || val === undefined) return '""';
+        return `"${String(val).replace(/"/g, '""')}"`;
+    }
+
+    // Pathao Bulk CSV Export (Issue 2.4)
+    function exportPathaoCSV() {
+        const orders = getStoredOrders();
+        if (orders.length === 0) {
+            showToast('No orders available in ledger to export.', 'info');
+            return;
+        }
+
+        // Columns: Store Name,Recipient Name,Recipient Phone,Recipient Address,Recipient District,Recipient Thana,COD Amount,Item Description,Special Note
+        const headers = [
+            'Store Name',
+            'Recipient Name',
+            'Recipient Phone',
+            'Recipient Address',
+            'Recipient District',
+            'Recipient Thana',
+            'COD Amount',
+            'Item Description',
+            'Special Note'
+        ];
+
+        const csvRows = [headers.join(',')];
+
+        orders.forEach(order => {
+            const storeName = (window.CONFIG && window.CONFIG.storeName) || "Safwan's Vape Shop BD";
+            const custName = order.customer ? order.customer.name : '';
+            const phone = order.customer ? order.customer.phone : '';
+            const address = order.customer ? order.customer.address : '';
+            
+            // District determination
+            let district = 'Dhaka';
+            if (order.delivery && order.delivery.id === 'outside_dhaka') {
+                district = 'Outside Dhaka';
+            }
+            const thana = 'Dhaka Metro';
+
+            const codAmount = order.pricing ? (order.pricing.dueOnDelivery || 0) : 0;
+            const itemsDesc = (order.items || []).map(i => `${i.name} (x${i.qty})`).join('; ');
+            const note = `Order #${order.id} | ${order.payment ? order.payment.name : ''}`;
+
+            const row = [
+                escapeCSV(storeName),
+                escapeCSV(custName),
+                escapeCSV(phone),
+                escapeCSV(address),
+                escapeCSV(district),
+                escapeCSV(thana),
+                escapeCSV(codAmount),
+                escapeCSV(itemsDesc),
+                escapeCSV(note)
+            ];
+            csvRows.push(row.join(','));
+        });
+
+        // Trigger CSV Download with UTF-8 BOM
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + csvRows.join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `pathao_orders_${timestamp}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast(`Exported ${orders.length} order(s) for Pathao upload!`, 'success');
+    }
+
+    function clearLedgerOrders() {
+        const orders = getStoredOrders();
+        if (orders.length === 0) {
+            showToast('Ledger is already empty.', 'info');
+            return;
+        }
+        if (confirm(`Are you sure you want to permanently clear all ${orders.length} order record(s) from this browser?`)) {
+            localStorage.removeItem('sv_orders');
+            renderLedgerUI();
+            showToast('All order records have been cleared.', 'info');
+        }
+    }
+
+    function checkHashRoute() {
+        if (window.location.hash === '#ledger' || window.location.hash === '#admin') {
+            openLedger();
+        }
     }
 
     // =========================================================================
@@ -986,7 +1325,11 @@
         closeCheckout,
         submitOrder,
         showToast,
-        clearCart
+        clearCart,
+        openLedger,
+        closeLedger,
+        exportPathaoCSV,
+        clearLedgerOrders
     };
 
     // =========================================================================
@@ -996,6 +1339,32 @@
         checkAgeGate();
         loadProducts();
         setupCopyBkash();
+
+        // Keyboard Shortcut: Ctrl+Shift+L or Cmd+Shift+L for Merchant Ledger
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
+                e.preventDefault();
+                const modal = document.getElementById('ledger-modal');
+                if (modal && modal.classList.contains('open')) {
+                    closeLedger();
+                } else {
+                    openLedger();
+                }
+            }
+        });
+
+        // Hash Route Navigation for #ledger / #admin
+        window.addEventListener('hashchange', checkHashRoute);
+        checkHashRoute();
+
+        // Footer Ledger link handler
+        const ledgerBtn = document.getElementById('open-ledger-btn');
+        if (ledgerBtn) {
+            ledgerBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openLedger();
+            });
+        }
 
         // Update store dynamic text if placeholders exist
         if (window.CONFIG) {

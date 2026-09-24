@@ -17,6 +17,15 @@ window.CONFIG = {
     // bKash Account (Send Money)
     // Update with shop owner's personal bKash number prior to public launch
     bkashNumber: "017XX-XXXXXX", 
+
+    // Operational Fee Benchmarks (Issues 2.3, 2.5)
+    pathaoCodFeeRate: 0.01, // Pathao 1% COD collection charge
+    bkashCashoutFeeRate: 0.0185, // 1.85% personal bKash cashout fee benchmark
+
+    // Helper to detect if bKash number is still an unconfigured placeholder (e.g. contains 'XX')
+    isBkashPlaceholder: function() {
+        return typeof this.bkashNumber === 'string' && /xx/i.test(this.bkashNumber);
+    },
     
     // Order Logging Webhook (Roadmap 4)
     // If provided, order payloads are asynchronously posted here (e.g. Google Sheets Apps Script, Supabase edge function)

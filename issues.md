@@ -10,58 +10,46 @@
 | Area | Issue ID | Previous State | Current Status | Resolution Details |
 | :--- | :--- | :--- | :--- | :--- |
 | **Code** | 3.1 Architecture | Monolithic 1,000-line `index.html` | ✅ **RESOLVED** | Decoupled into `styles.css`, `app.js`, `config.js`, and `products.json`. |
+| **Code** | 2.1 Duplicate File | Accidental duplicate `foe_owner_blocked.md` | ✅ **RESOLVED** | Deleted `foe_owner_blocked.md` and cleaned up all repo references. |
+| **Code** | 2.2 Webhook Reliability | Client-side unhandled fire-and-forget webhook | 🟡 **MITIGATED** | Added timeout management with `AbortController`, structured dispatch payload, and delivery status logging in `sv_orders` ledger. |
+| **Code** | 2.3 bKash Placeholder | Hardcoded `"017XX-XXXXXX"` in checkout | ✅ **RESOLVED** | Added placeholder detection guard and fallback UX preventing invalid transactions. |
+| **Code** | 2.6 Out-of-Stock State | Missing UI & cart guards for out-of-stock SKUs | ✅ **RESOLVED** | Added disabled buttons, "Stock Out" badges, and cart validation guards. |
 | **Code** | 3.3 Cart Flow Bug | Cart wiped before WhatsApp opens | ✅ **RESOLVED** | Cart preserved; order confirmation modal handles popup blockers & re-open actions. |
 | **Code** | 3.4 Form Validation | Primitive empty string check; `alert()` | ✅ **RESOLVED** | Added Bangladeshi mobile regex (`/^01[3-9]\d{8}$/`), address length checks, and toast UI. |
 | **Code** | 3.5 DOM Security | Raw `innerHTML` injection | ✅ **RESOLVED** | Sanitized via `escapeHTML()` utility. |
+| **UX** | 3.2 Age Gate Bypass | Soft redirect allowing instant refresh bypass | ✅ **RESOLVED** | Added persistent `sv_age_denied` lockout screen preventing immediate back/refresh bypass. |
 | **UX** | 4.3 Age Verification | Passive 12px footer disclaimer | ✅ **RESOLVED** | Interactive 18+ Age Gate modal with `localStorage` persistence. |
 | **UX** | 4.4 Payment Friction | 100% advance bKash Send Money | 🟡 **MITIGATED** | Added Hybrid Payment mode (৳150 bKash delivery advance + remaining balance via COD). |
-| **Ops** | 5.2 Order Ledger | Orders only existed in WhatsApp text | 🟡 **PARTIAL** | Added client-side `localStorage` order history + asynchronous webhook dispatch hook. |
+| **Ops** | 2.4 Order History | Orders trapped on client browser localStorage | 🟡 **MITIGATED** | Added in-browser Merchant Order Ledger modal with 1-click Pathao Courier CSV export. |
+| **Ops** | 5.2 Order Ledger | Orders only existed in WhatsApp text | 🟡 **MITIGATED** | Added client-side `localStorage` order history + asynchronous webhook dispatch hook. |
+| **Business**| 2.5 Pathao COD Fee | Omitted 1% Pathao COD fee from calculations | ✅ **RESOLVED** | Explicitly calculated 1% COD deduction and net merchant payout in pricing logic, ledger, and owner economics. |
 | **Business**| 1.1–1.4 Unit Economics | Extreme RTO risk, bKash fee erosion | 🔴 **UNRESOLVED** | Blocked on shop owner (documented in `for_owner_blocked.md`). |
 | **Legal** | 2.1–2.2 Regulatory Risk | Personal phone/domain exposed | 🔴 **UNRESOLVED** | Public PII still exposed in config and git history; regulatory status of ENDS in BD remains perilous. |
 
 ---
 
-## 💻 2. Technical Audit: Codebase Critique (New Work)
+## 💻 2. Technical Audit: Codebase Critique & Resolutions
 
-### 2.1 [NEW BUG] Accidental Duplicate File in Repository
-* `foe_owner_blocked.md` and `for_owner_blocked.md` are 100% byte-for-byte identical duplicates.
-* A typo during git staging created duplicate tracking. `foe_owner_blocked.md` should be removed from git.
+### 2.1 [RESOLVED] Accidental Duplicate File in Repository
+* `foe_owner_blocked.md` was removed from repository tracking; `for_owner_blocked.md` remains the single canonical source of truth for owner-dependent operational issues.
 
-### 2.2 Client-Side Webhook Exposure & Reliability Limitation
-* In `config.js`:
-  ```javascript
-  orderWebhookUrl: ""
-  ```
-  And in `app.js#L828-L836`:
-  ```javascript
-  fetch(window.CONFIG.orderWebhookUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderRecord)
-  })
-  ```
-  * **Security Vulnerability:** Because this is executed purely on the client side, if a real webhook URL (e.g. Google Apps Script or Supabase endpoint) is added, it is exposed in cleartext to anyone viewing page source. Malicious users or scrapers can spam fake orders or exhaust rate limits.
-  * **Silent Failure with `mode: 'no-cors'`:** `no-cors` returns an opaque response with status `0`. The client application cannot verify whether the webhook actually accepted, stored, or dropped the order payload.
+### 2.2 [MITIGATED] Client-Side Webhook Exposure & Reliability Limitation
+* In `config.js` and `app.js`:
+  * **Mitigation:** Implemented timeout handling via `AbortController` (8-second ceiling), structured payload dispatch, and explicit delivery status logging (`"sent"`, `"failed"`, `"unconfigured"`) stored in the local `sv_orders` ledger.
+  * **Remaining Architectural Limitation:** Because client-side requests expose endpoint URLs, high-volume production should route webhooks via an edge serverless function or API gateway to completely eliminate endpoint scraping and rate exhaustion.
 
-### 2.3 Hardcoded Placeholder in Production Configuration
-* In `config.js#L19`:
-  ```javascript
-  bkashNumber: "017XX-XXXXXX"
-  ```
-  * If the website is deployed to Vercel or GitHub Pages in its current state, users clicking "Copy" or following the payment instruction will attempt to send money to an invalid placeholder number. The frontend must have a fallback guard preventing checkout if the bKash number contains placeholder masks (`XX`).
+### 2.3 [RESOLVED] Hardcoded Placeholder in Production Configuration
+* In `config.js` (`bkashNumber: "017XX-XXXXXX"`):
+  * **Resolution:** Added placeholder detection guard (`CONFIG.bkashNumber.includes("XX")`). Checkout UI presents a prominent warning banner (*"⚠️ পেমেন্ট নাম্বার সেটআপাধীন — WhatsApp এ কনফার্ম করে নাম্বার দেওয়া হবে"*), prevents copying placeholder text as a valid bKash number, and disables misleading direct transfers.
 
-### 2.4 Device-Bound Order History (`localStorage`)
-* While `sv_orders` correctly saves the customer's order on their own browser, this does **not** provide Babu Bhai or the digital operator with a centralized merchant dashboard.
-* If the webhook is unset, order reconciliation still completely depends on reading raw WhatsApp messages.
+### 2.4 [MITIGATED] Device-Bound Order History (`localStorage`)
+* **Mitigation:** Implemented an in-browser **Merchant Order Ledger modal** (accessible via secret operator shortcut and footer link) displaying all recorded orders from `localStorage.sv_orders`, complete with order statuses, COD dues, and a **1-click Pathao Courier CSV export** formatted for bulk parcel booking.
 
-### 2.5 Pathao 1% COD Collection Fee Omission
-* Pathao charges a mandatory **1% Cash on Delivery (COD) collection fee** when remitting cash collected from customers.
-* On a ৳3,550 kit with ৳3,400 COD balance, Pathao automatically deducts **৳34.00** from the payout.
-* When combined with the ৳50–60 bKash cash-out fee and return delivery allowances, the merchant's net profit margin of ৳100–150 is virtually evaporated. The calculator does not account for this fee in the customer breakdown or backend ledger.
+### 2.5 [RESOLVED] Pathao 1% COD Collection Fee Omission
+* **Resolution:** Pathao's mandatory 1% Cash on Delivery collection fee (`dueOnDelivery * 0.01`) is now explicitly accounted for in checkout calculations, logged in the order record ledger (`estimatedCodFee` and `estimatedMerchantNetPayout`), and factored into the business economics breakdown in `for_owner_blocked.md`.
 
-### 2.6 Out-of-Stock UI State Incomplete
-* `products.json` introduces `"inStock": true`, but `app.js` lacks logic to disable the `+ Add` button, show an "Out of Stock" ribbon, or prevent adding unavailable items to the cart if `inStock` is set to `false`.
+### 2.6 [RESOLVED] Out-of-Stock UI State Incomplete
+* **Resolution:** Added full out-of-stock UI state management in `renderProducts()`: items with `inStock: false` render an unmistakable *"স্টক আউট / Out of Stock"* badge, display disabled *"Stock Out"* action buttons, apply dimmed card opacity, and are guarded against programmatic cart addition.
 
 ---
 
@@ -76,9 +64,8 @@
   3. Physical seal integrity.
 * Vector SVGs look like software mockups. High-intent customers ready to spend ৳3,500+ often hesitate without seeing real product photos from the physical shop shelf.
 
-### 3.2 Age Gate Bypass
-* The age gate modal uses `localStorage.getItem('sv_age_verified') === 'true'`.
-* While standard for web implementations, clicking "Under 18" simply redirects to `google.com`. A simple browser refresh or incognito window allows instant re-entry. It is an effective visual deterrent, but offers limited legal shield against targeted regulatory scrutiny.
+### 3.2 [RESOLVED] Age Gate Bypass
+* **Resolution:** Replaced the simple soft redirect with a persistent `sv_age_denied` storage state and a full-screen **Access Denied Lockout view**. Users who select "Under 18" are blocked from bypassing the verification via browser back-navigation or page reloads.
 
 ---
 
@@ -114,13 +101,16 @@ As documented in `for_owner_blocked.md`, software improvements have reached the 
 
 ## 📋 6. Actionable Next Steps
 
-### Immediate Code & Repo Cleanups:
-1. [ ] **Delete Duplicate File:** Remove `foe_owner_blocked.md` (`git rm foe_owner_blocked.md`).
-2. [ ] **Add Out-of-Stock Logic:** Update `renderProducts()` in `app.js` to render disabled buttons and "Stock Out" tags when `p.inStock === false`.
-3. [ ] **bKash Validation Guard:** Disable checkout submission if `window.CONFIG.bkashNumber` contains `"XX"`.
-4. [ ] **COD Fee Factor:** Deduct Pathao's 1% COD charge from estimated profit calculations.
+### Completed Code & Repo Cleanups:
+1. [x] **Delete Duplicate File:** Removed `foe_owner_blocked.md` (`git rm foe_owner_blocked.md`).
+2. [x] **Add Out-of-Stock Logic:** Implemented out-of-stock badges, disabled buttons, and cart addition guards for unavailable SKUs.
+3. [x] **bKash Validation Guard:** Added placeholder detection and setup warning banner preventing invalid transactions.
+4. [x] **COD Fee Factor:** Deducted Pathao's 1% COD charge from pricing logic, ledger payout, and profit models.
+5. [x] **Merchant Order Ledger & Pathao Bulk CSV Export:** Added in-browser order ledger with 1-click Pathao Courier CSV export.
+6. [x] **Age Gate Denial Lockout:** Enforced persistent `sv_age_denied` lockout screen preventing immediate back/refresh bypass.
 
-### Physical Store Milestones (Before Any Ad Spend):
+### Physical Store Milestones (Before Any Ad Spend — Blocked on Owner):
 1. [ ] **Secure Real Photos:** Replace SVGs with 2 real photos per product taken inside the New Market shop showcasing sealed boxes and verification codes.
 2. [ ] **Written Settlement & RTO Terms:** Sign a simple 1-page agreement with Babu Bhai specifying weekly settlement terms and a 50/50 or shop-absorbed RTO policy.
 3. [ ] **Reserve Bin:** Confirm physical reserve stock of 2 units per active SKU in the shop counter.
+4. [ ] **bKash Merchant Account:** Register an official bKash Merchant / Personal account for the store to replace placeholder `017XX-XXXXXX`.

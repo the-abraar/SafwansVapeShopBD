@@ -21,12 +21,14 @@ A thorough diagnostic of the business workflow reveals that the primary bottlene
 +----------------------------------------------------+------------------------------+
 | FIXED / SOLVABLE BY CODE (Tech Lead)              | BLOCKED ON OWNER / PARTNER   |
 +----------------------------------------------------+------------------------------+
-| • Interactive 18+ Age Gate & Disclaimers          | • Physical Stock Guarantee   |
+| • Hardened 18+ Age Gate & Lockout Screen          | • Physical Stock Guarantee   |
 | • Modular Frontend Architecture (Config & Data)   | • RTO Cost Absorption        |
 | • Form Validation (BD Phone Regex & Address)      | • Genuine Product Photos     |
 | • Hybrid Payment Breakdown (৳150 Advance + COD)   | • bKash / Pathao Merchant ID |
-| • Order Webhook Dispatch & LocalStorage Safety    | • Trade License & Legal Risk |
-| • Modular WhatsApp Routing Logic                  | • Wholesale Sourcing Capital |
+| • Pathao 1% COD Fee Calculation & Ledger Payout   | • Trade License & Legal Risk |
+| • Merchant Order Ledger & Pathao Bulk CSV Export  | • Wholesale Sourcing Capital |
+| • bKash Placeholder Setup Mode Guard              |                              |
+| • Out-of-Stock Badges & Cart Validation Guards    |                              |
 +----------------------------------------------------+------------------------------+
 ```
 
@@ -38,28 +40,50 @@ Without direct, decisive action from the physical store management on the seven 
 
 The current financial blueprint operates on dangerously thin margins while exposing the digital operator and the business to compounding operational losses.
 
-### 1.1 The Unit Economics Breakdown
-The existing plan projects a gross margin of:
+### 1.1 The Unit Economics Breakdown & Fee Deductions
+The baseline business plan projects a gross margin of:
 * **Kit Commission:** ৳100 per device kit from the shop.
 * **Online Markup:** ৳20 – ৳50 added to store retail price.
 * **Gross Return per Kit:** ৳120 – ৳150 on an item retailing for ৳3,500 – ৳3,800 (~3.5% to 4.2% gross margin).
 
-#### The bKash Cash-Out Erosion
+#### The bKash Cash-Out Erosion (100% Advance Scenario)
 When an online customer pays 100% advance via personal bKash ("Send Money"):
 * Total collected for an OXVA Xlim Pro + Delivery: **৳3,650**.
 * bKash Personal Cash-Out Fee (via Agent/ATM): **1.85%** (or 1.49% for prioritized favorite agent numbers).
 * **Cash-Out Fee Deduction:** ৳3,650 × 1.85% = **৳67.52**.
-* **Net Remaining Profit:** ৳150.00 − ৳67.52 = **৳82.48**.
-* Over **45% of the gross profit margin is instantly erased** by a single consumer payment withdrawal.
+* **Net Remaining Profit:** ৳150.00 − ৳67.52 = **৳82.48** (over **45% of gross profit margin erased** by consumer cashout).
 
-### 1.2 Return-to-Origin (RTO) Courier Loss Risk
+#### The Pathao 1% COD Collection Fee (Hybrid Payment Scenario)
+Under the Hybrid Payment model (৳150 advance bKash delivery fee + remaining balance via Cash on Delivery):
+* Store Device Retail Price: **৳3,400**.
+* Delivery Fee: **৳150**.
+* Advance bKash Paid: **৳150** (covers courier delivery commitment).
+* Due on Delivery (COD Balance): **৳3,400**.
+* **Pathao Mandatory 1% COD Fee:** ৳3,400 × 1.0% = **৳34.00**.
+* **Pathao Net Remittance to Merchant:** ৳3,400 − ৳34.00 = **৳3,366.00**.
+
+#### Combined Erosion Impact & System Calculation
+When bKash cashout (on the ৳150 advance = ~৳2.78) and Pathao 1% COD fee (৳34.00) are combined, the total payment processing friction is **৳36.78**. 
+Without explicit accounting, this ৳34–৳37 deduction would silently erode Babu Bhai's inventory realization or the tech partner's ৳100 commission.
+
+**How the Updated System Protects the Economics:**
+1. **Automated Calculation in Ledger:** The application frontend and order ledger now explicitly calculate the 1% Pathao fee:
+   $$\text{Estimated COD Fee} = \text{round}(\text{dueOnDelivery} \times 0.01)$$
+   $$\text{Estimated Net Merchant Payout} = \text{dueOnDelivery} - \text{Estimated COD Fee}$$
+2. **Deterministic Settlement:** In the Merchant Order Ledger and WhatsApp summary, Babu Bhai knows upfront that on a ৳3,400 COD consignment, Pathao will remit exactly **৳3,366.00**, preventing reconciliation disputes.
+3. **Protection via ৳150 Hybrid Deposit:** The upfront ৳150 bKash deposit guarantees that the delivery expense is already funded before the package leaves New Market. Even after Pathao collects its 1% remittance fee, the principal cost of goods sold (COGS) is fully preserved.
+
+### 1.2 Return-to-Origin (RTO) Courier Loss Risk & Hybrid Protection
 In Bangladesh e-commerce, courier return rates for consumer electronics and lifestyle goods typically range between **10% and 20%** due to customer unreachability, buyer remorse, or impulsive refusals upon delivery.
 
 * **Pathao Inside Dhaka Delivery Fee:** ৳60 – ৳80.
 * **Pathao Failed Delivery / Return Fee:** 50% to 100% of forward charge (৳40 – ৳80 return penalty).
 * **Total Sunk Courier Cost on 1 RTO:** ৳100 – ৳150.
-* **Net Financial Impact:** If **one** customer rejects a parcel, the entire net profit from **two to three successfully delivered kits is completely wiped out.**
-* **Current Policy Defect:** There is no written agreement specifying who absorbs this courier loss—does Babu Bhai deduct it from the tech partner's weekly payout, or does the shop treat it as dead operational loss?
+* **Net Financial Impact Without Hybrid Deposit:** If an order is shipped 100% COD and rejected at the doorstep, the entire net profit from **two to three successfully delivered kits is completely wiped out.**
+* **Why the Hybrid Deposit Shields the Business:** Requiring a non-refundable **৳150 advance delivery deposit** via bKash achieves two critical defenses:
+  1. **Filters Out Impulsive / Fake Buyers:** Drastically drops refusal rates from 15%+ to under 2%.
+  2. **100% Sunk Cost Hedging:** If a parcel is nonetheless returned, the ৳150 customer deposit fully absorbs both the forward shipping charge (৳80) and the return penalty (৳40–৳70), ensuring neither Babu Bhai nor the tech partner loses capital on logistics.
+* **Action Required from Babu Bhai:** A written, signed 1-page agreement must formalize that hybrid deposits are dedicated to logistics coverage and clarify the commission split schedule every Friday.
 
 ### 1.3 Commission Split & Settlement Mechanics
 * Currently, funds sit in a personal bKash account while goods reside in New Market.

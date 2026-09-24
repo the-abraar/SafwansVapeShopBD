@@ -158,6 +158,11 @@
         <p style="margin-top: 6px; font-size: 12px;">
             WhatsApp Support: <strong id="footer-phone">01327-045005</strong>
         </p>
+        <div class="footer-ledger-row">
+            <a href="#ledger" id="open-ledger-btn" class="footer-ledger-link">
+                <i class="fa-solid fa-list-check"></i> Merchant Order Ledger
+            </a>
+        </div>
     </footer>
 
     <!-- Floating WhatsApp Button -->
@@ -245,6 +250,10 @@
 
                 <!-- bKash Send Money Box -->
                 <div class="bkash-box">
+                    <div class="bkash-warning-banner" id="bkash-warning-banner" style="display: none;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>⚠️ পেমেন্ট নাম্বার সেটআপাধীন — WhatsApp এ অর্ডার পাঠিয়ে দিলে সেখান থেকেই অফিসিয়াল bKash নাম্বার দেওয়া হবে।</span>
+                    </div>
                     <div class="label">bKash Send Money (Personal)</div>
                     <div class="bkash-number-row">
                         <span class="number" id="bkash-number-display">017XX-XXXXXX</span>
@@ -330,6 +339,35 @@
                     <button class="btn-secondary btn-outline-danger" id="confirm-keep-cart">
                         <i class="fa-solid fa-arrow-left"></i> Keep Bag & Back to Store
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Merchant Order Ledger Modal (Issue 2.4 & Pathao Bulk CSV Export) -->
+    <div class="modal-overlay" id="ledger-modal" role="dialog" aria-labelledby="ledger-modal-title">
+        <div class="modal ledger-modal-dialog">
+            <div class="modal-header">
+                <h2 id="ledger-modal-title"><i class="fa-solid fa-table-list"></i> Merchant Order Ledger</h2>
+                <button class="modal-close" onclick="App.closeLedger()" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body ledger-modal-body">
+                <div class="ledger-header-bar">
+                    <div class="ledger-metrics" id="ledger-metrics">
+                        <!-- Populated dynamically: Total Orders, Revenue, COD Due, Net Payout -->
+                    </div>
+                    <div class="ledger-actions">
+                        <button class="btn-export-csv" id="export-pathao-csv-btn" onclick="App.exportPathaoCSV()">
+                            <i class="fa-solid fa-file-csv"></i> Export Pathao CSV
+                        </button>
+                        <button class="btn-clear-ledger" id="clear-ledger-btn" onclick="App.clearLedgerOrders()">
+                            <i class="fa-solid fa-trash-can"></i> Clear All Orders
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ledger-table-wrapper" id="ledger-table-wrapper">
+                    <!-- Populated dynamically: Table with Orders or Empty State -->
                 </div>
             </div>
         </div>

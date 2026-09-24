@@ -89,20 +89,40 @@ SafwansVapeShopBD/
 
 ## ⚡ Core Features
 
-### 1. Interactive 18+ Age Gate
-Complies with tobacco control guidelines by requiring explicit, interactive age verification before rendering the catalog. Persists age confirmation in `sessionStorage` or `localStorage` to avoid repeatedly disturbing returning adult customers.
+### 1. Hardened 18+ Age Gate & Lockout
+Complies with tobacco control guidelines by requiring explicit, interactive age verification before rendering the catalog. If a visitor indicates they are under 18, access is permanently denied via persistent `sv_age_denied` storage and an uncompromising lockout screen preventing back-navigation or refresh bypass.
 
 ### 2. Hybrid Payment Protection (Advance Courier Fee + COD)
 Addresses the high drop-off rate of 100% advance payments while eliminating Return-to-Origin (RTO) courier losses:
 * **Advance Commitment Fee:** Customer sends ৳150 via bKash to confirm the order and cover delivery costs.
 * **Cash on Delivery (COD):** The product balance is paid directly to the Pathao courier upon package delivery and inspection.
 
-### 3. Fail-Safe WhatsApp Order Routing
+### 3. Transparent Pathao 1% COD Fee Accounting
+Pathao courier charges a mandatory 1% Cash on Delivery collection fee when remitting customer cash. The system explicitly factors this fee (`dueOnDelivery * 0.01`) into checkout totals, backend order payloads, and owner settlement ledgers (`estimatedCodFee` and `estimatedMerchantNetPayout`) to prevent hidden margin leakage.
+
+### 4. Dynamic Out-of-Stock Inventory Control
+Product cards seamlessly reflect availability defined in `products.json` (`"inStock": false`):
+* High-visibility **"স্টক আউট / Out of Stock"** ribbon badges on depleted items.
+* Disabled action buttons with clear "Stock Out" status indicators.
+* Client-side cart addition guards preventing depleted SKUs from entering the checkout funnel.
+
+### 5. bKash Setup Mode Guard
+Prevents real customers from sending money to unconfigured placeholders (e.g. `017XX-XXXXXX`):
+* Detects placeholder masks and switches checkout to a safe "Setup Mode".
+* Renders an explanatory warning banner (*"⚠️ পেমেন্ট নাম্বার সেটআপাধীন — WhatsApp এ কনফার্ম করে নাম্বার দেওয়া হবে"*).
+* Blocks misleading copy-to-clipboard interactions on placeholder numbers.
+
+### 6. Merchant Order Ledger & 1-Click Pathao Bulk CSV Export
+Equips the New Market shop operator and digital partner with an in-browser management console:
+* View all customer submissions locally stored in `localStorage.sv_orders` with full itemization, delivery address, and payment status.
+* **1-Click Pathao CSV Export:** Instantly generates a formatted CSV ready for bulk parcel upload on the Pathao Merchant Web Dashboard (Merchant Order ID, Recipient Name, Recipient Phone, Recipient Address, COD Amount).
+
+### 7. Fail-Safe WhatsApp Order Routing
 * Generates structured, pre-formatted order summaries (bilingual Bangla/English).
 * Includes product list, quantities, delivery address, selected payment method, and bKash transaction confirmation prompts.
 * **Non-Destructive Cart State:** The cart is preserved until the user initiates the chat window, preventing loss of cart items due to browser popup blockers.
 
-### 4. Zero-Dependency Light/Dark UI
+### 8. Zero-Dependency Light/Dark UI
 * High-contrast, clean modern aesthetic built for mobile screens.
 * Responsive cart drawer with instant quantity modifications and subtotal calculations.
 * Pure vanilla implementation ensuring sub-second load times even on slow mobile connections.
@@ -126,8 +146,12 @@ window.CONFIG = {
     supportPhoneDisplay: "01327-045005",   // Display string on UI
     
     // bKash Account (Send Money)
-    bkashNumber: "017XX-XXXXXX",           // Shop Owner's bKash number
+    bkashNumber: "017XX-XXXXXX",           // Shop Owner's bKash number (guarded against XX placeholders)
     
+    // Logistics & Financial Rates
+    pathaoCodFeeRate: 0.01,                // 1% Pathao Cash on Delivery collection fee
+    bkashCashoutFeeRate: 0.0185,           // 1.85% personal bKash cashout fee benchmark
+
     // Order Logging Webhook (Optional Google Apps Script / Supabase)
     orderWebhookUrl: "", 
 
@@ -251,7 +275,7 @@ Running the business requires continuous collaboration between the New Market sh
 
 ## 📚 Documentation Directory
 
-* **[`for_owner_blocked.md`](file:///Users/blackbird/Everything/dev/SafwansVapeShopBD/for_owner_blocked.md)** (also mirrored as **[`foe_owner_blocked.md`](file:///Users/blackbird/Everything/dev/SafwansVapeShopBD/foe_owner_blocked.md)**) — Comprehensive analysis of non-code business, legal, financial, and inventory blockers requiring owner resolution.
+* **[`for_owner_blocked.md`](file:///Users/blackbird/Everything/dev/SafwansVapeShopBD/for_owner_blocked.md)** — Comprehensive analysis of non-code business, legal, financial, and inventory blockers requiring owner resolution.
 * **[`issues.md`](file:///Users/blackbird/Everything/dev/SafwansVapeShopBD/issues.md)** — In-depth architectural review and technical critique of the codebase.
 * **[`init_idea.md`](file:///Users/blackbird/Everything/dev/SafwansVapeShopBD/init_idea.md)** — Initial concept, unit economics, and customer journey.
 * **[`todo.md`](file:///Users/blackbird/Everything/dev/SafwansVapeShopBD/todo.md)** — Project roadmap and actionable task status.
