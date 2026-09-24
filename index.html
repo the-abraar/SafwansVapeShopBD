@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safwan's Premium Vapes</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9333ea', // Purple-600
+                        primaryHover: '#a855f7', // Purple-500
+                        darkBg: '#0f172a', // Slate-900
+                        cardBg: '#1e293b', // Slate-800
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar for premium feel */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-darkBg text-gray-100 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- 18+ Verification Modal -->
+    <div id="age-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-cardBg p-8 rounded-2xl shadow-2xl max-w-sm w-full mx-4 border border-gray-700 text-center">
+            <i class="fa-solid fa-triangle-exclamation text-4xl text-yellow-500 mb-4"></i>
+            <h2 class="text-2xl font-bold mb-2">Age Verification</h2>
+            <p class="text-gray-400 mb-6">You must be 18 years or older to enter this site.</p>
+            <div class="flex gap-4 justify-center">
+                <button onclick="closeAgeModal()" class="bg-primary hover:bg-primaryHover text-white px-6 py-2 rounded-lg font-semibold transition">I am 18+</button>
+                <button onclick="window.location.href='https://google.com'" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="glass sticky top-0 z-40 border-b border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-black tracking-tighter flex items-center gap-2">
+                <i class="fa-solid fa-cloud text-primary"></i>
+                <span>SAFWAN<span class="text-primary">VAPES</span></span>
+            </div>
+            <button onclick="toggleCart()" class="relative p-2 text-gray-300 hover:text-white transition">
+                <i class="fa-solid fa-cart-shopping text-xl"></i>
+                <span id="cart-count" class="absolute top-0 right-0 bg-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center translate-x-1 -translate-y-1 scale-0 transition-transform">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-6xl mx-auto px-4 py-12 md:py-20 text-center">
+        <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">Premium Vaping Experience. <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">Delivered to your door.</span></h1>
+        <p class="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">Curated selection of the top authentic kits and premium e-liquids. Fast Pathao delivery across Dhaka.</p>
+        <div class="flex items-center justify-center gap-6 text-sm text-gray-300 font-medium">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-green-500"></i> 100% Authentic</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-truck-fast text-blue-500"></i> Fast Delivery</span>
+        </div>
+    </header>
+
+    <!-- Product Grid -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold">Featured Collection</h2>
+            <div class="h-1 w-20 bg-primary rounded"></div>
+        </div>
+        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Products injected by JS -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-12 py-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2026 Safwan Vapes. All rights reserved.</p>
+        <p class="mt-2">Warning: This product contains nicotine. Nicotine is an addictive chemical.</p>
+    </footer>
+
+    <!-- Cart Overlay & Sidebar -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity" onclick="toggleCart()"></div>
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full max-w-md bg-cardBg border-l border-gray-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50">
+            <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-primary"></i> Your Cart</h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div id="cart-items" class="flex-grow p-6 overflow-y-auto flex flex-col gap-4">
+            <!-- Cart items injected here -->
+            <div class="text-center text-gray-500 mt-10" id="empty-cart-msg">Your cart is empty.</div>
+        </div>
+        <div class="p-6 border-t border-gray-800 bg-gray-900/50">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-400">Subtotal</span>
+                <span class="font-bold text-lg" id="cart-subtotal">0 BDT</span>
+            </div>
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-400 text-sm">Delivery (Pathao)</span>
+                <span class="text-gray-400 text-sm">Calculated later</span>
+            </div>
+            <button onclick="openCheckout()" id="checkout-btn" class="w-full bg-primary hover:bg-primaryHover text-white py-4 rounded-xl font-bold text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/20" disabled>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity">
+        <div class="bg-cardBg rounded-2xl shadow-2xl max-w-lg w-full mx-4 border border-gray-700 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-cardBg rounded-t-2xl z-10">
+                <h2 class="text-2xl font-bold">Checkout</h2>
+                <button onclick="closeCheckout()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto">
+                <!-- Payment Instructions -->
+                <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 mb-6">
+                    <h3 class="font-bold text-blue-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-wallet"></i> bKash Payment Info</h3>
+                    <p class="text-sm text-gray-300 mb-2">Please Send Money to our official bKash Personal number:</p>
+                    <div class="text-2xl font-mono font-bold text-white bg-gray-900 py-2 px-4 rounded-lg text-center mb-2 tracking-widest">017XX-XXXXXX</div>
+                    <p class="text-xs text-gray-400">Total to send: <strong class="text-white text-sm" id="checkout-total-display">0 BDT</strong> (+ Pathao fee upon delivery)</p>
+                </div>
+
+                <!-- Shipping Form -->
+                <form id="checkout-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
+                        <input type="text" id="cust-name" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition" placeholder="e.g. Safwan">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Phone Number</label>
+                        <input type="tel" id="cust-phone" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition" placeholder="01...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Detailed Address</label>
+                        <textarea id="cust-address" required rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition" placeholder="House/Flat, Road, Area..."></textarea>
+                    </div>
+                </form>
+
+                <div class="mt-6 p-4 bg-gray-900/50 rounded-xl border border-gray-800 text-sm text-gray-400">
+                    <i class="fa-solid fa-info-circle text-primary"></i> <strong>Next Step:</strong> Clicking the button below will open WhatsApp. Please attach your bKash screenshot there!
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-gray-800 sticky bottom-0 bg-cardBg rounded-b-2xl">
+                <button onclick="submitOrder()" class="w-full bg-[#25D366] hover:bg-[#1ebd5a] text-white py-4 rounded-xl font-bold text-lg transition flex items-center justify-center gap-3 shadow-lg shadow-[#25D366]/20">
+                    <i class="fa-brands fa-whatsapp text-2xl"></i> Confirm via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. PRODUCT DATA ---
+        // You can update these 5-7 items as per Babu Bhai's actual stock
+        const products = [
+            { id: 1, name: "Uwell Caliburn G3 Pod Kit", category: "Full Kit", price: 3050, image: "https://images.unsplash.com/photo-1536294528148-9f20e729a671?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+            { id: 2, name: "Vaporesso XROS 3 Kit", category: "Full Kit", price: 3250, image: "https://images.unsplash.com/photo-1629851602492-36c5354ee110?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+            { id: 3, name: "OXVA Xlim Pro Pod Kit", category: "Full Kit", price: 3550, image: "https://images.unsplash.com/photo-1536294528148-9f20e729a671?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+            { id: 4, name: "RELX Infinity 2 Device", category: "Device Only", price: 2050, image: "https://images.unsplash.com/photo-1629851602492-36c5354ee110?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+            { id: 5, name: "Vgod SaltNic Dry Tobacco 30ml", category: "E-Liquid", price: 1550, image: "https://images.unsplash.com/photo-1579298245158-33e8f568f7d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+            { id: 6, name: "Caliburn G3 Replacement Pods (4pcs)", category: "Accessories", price: 1250, image: "https://images.unsplash.com/photo-1579298245158-33e8f568f7d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" }
+        ];
+
+        let cart = [];
+
+        // --- 2. INITIALIZATION ---
+        function init() {
+            renderProducts();
+            loadCart();
+        }
+
+        // Age Verification Modal Logic
+        function closeAgeModal() {
+            document.getElementById('age-modal').style.display = 'none';
+        }
+
+        // Render products to the grid
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products.map(p => `
+                <div class="bg-cardBg border border-gray-800 rounded-2xl overflow-hidden hover:border-primary transition duration-300 group shadow-lg">
+                    <div class="h-64 overflow-hidden relative bg-gray-900">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition duration-500 mix-blend-screen">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold text-primary border border-primary/30">
+                            ${p.category}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-white">${p.name}</h3>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-2xl font-black text-gray-200">${p.price.toLocaleString()} <span class="text-sm font-normal text-gray-500">BDT</span></span>
+                            <button onclick="addToCart(${p.id})" class="bg-gray-800 hover:bg-primary text-white p-3 rounded-xl transition duration-300">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- 3. CART LOGIC ---
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            
+            saveCart();
+            updateCartUI();
+            
+            // Auto open cart on add
+            if(document.getElementById('cart-sidebar').classList.contains('translate-x-full')) {
+                toggleCart();
+            }
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            saveCart();
+            updateCartUI();
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) removeFromCart(id);
+            }
+            saveCart();
+            updateCartUI();
+        }
+
+        function loadCart() {
+            const saved = localStorage.getItem('safwan_cart');
+            if (saved) cart = JSON.parse(saved);
+            updateCartUI();
+        }
+
+        function saveCart() {
+            localStorage.setItem('safwan_cart', JSON.stringify(cart));
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+
+            // Update badge
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCount.textContent = totalItems;
+            if (totalItems > 0) {
+                cartCount.classList.remove('scale-0');
+                cartCount.classList.add('scale-100');
+            } else {
+                cartCount.classList.remove('scale-100');
+                cartCount.classList.add('scale-0');
+            }
+
+            // Calculate Total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            subtotalEl.textContent = `${total.toLocaleString()} BDT`;
+
+            // Toggle Checkout Button
+            checkoutBtn.disabled = cart.length === 0;
+
+            // Render Items
+            if (cart.length === 0) {
+                emptyMsg.style.display = 'block';
+                // Remove all item nodes
+                Array.from(cartItems.children).forEach(child => {
+                    if (child.id !== 'empty-cart-msg') child.remove();
+                });
+            } else {
+                emptyMsg.style.display = 'none';
+                
+                // Clear old items
+                Array.from(cartItems.children).forEach(child => {
+                    if (child.id !== 'empty-cart-msg') child.remove();
+                });
+
+                cart.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = "flex gap-4 p-4 bg-gray-900 rounded-xl border border-gray-800";
+                    el.innerHTML = `
+                        <img src="${item.image}" class="w-20 h-20 object-cover rounded-lg mix-blend-screen opacity-80" alt="${item.name}">
+                        <div class="flex-grow flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-sm leading-tight text-white pr-4">${item.name}</h4>
+                                <button onclick="removeFromCart(${item.id})" class="text-gray-500 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-primary font-bold">${item.price.toLocaleString()} BDT</span>
+                                <div class="flex items-center gap-3 bg-cardBg rounded-lg px-2 border border-gray-700">
+                                    <button onclick="changeQty(${item.id}, -1)" class="text-gray-400 hover:text-white px-1 py-1"><i class="fa-solid fa-minus text-xs"></i></button>
+                                    <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
+                                    <button onclick="changeQty(${item.id}, 1)" class="text-gray-400 hover:text-white px-1 py-1"><i class="fa-solid fa-plus text-xs"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    cartItems.appendChild(el);
+                });
+            }
+        }
+
+        // --- 4. UI INTERACTIONS ---
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            
+            if (sidebar.classList.contains('translate-x-full')) {
+                // Open
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            } else {
+                // Close
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        function openCheckout() {
+            if (cart.length === 0) return;
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('checkout-total-display').textContent = `${total.toLocaleString()} BDT`;
+            
+            toggleCart(); // Close cart
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeCheckout() {
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // --- 5. WHATSAPP GENERATION ---
+        function submitOrder() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('cust-address').value;
+
+            if (!name || !phone || !address) {
+                alert("Please fill in your name, phone number, and address.");
+                return;
+            }
+
+            // Build Message
+            let text = `🛍 *NEW ORDER - SAFWAN VAPES*\n\n`;
+            text += `*Customer Details:*\n`;
+            text += `Name: ${name}\n`;
+            text += `Phone: ${phone}\n`;
+            text += `Address: ${address}\n\n`;
+            
+            text += `*Order Items:*\n`;
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                text += `• ${item.qty}x ${item.name} - ${itemTotal.toLocaleString()} BDT\n`;
+                total += itemTotal;
+            });
+            
+            text += `\n*Subtotal:* ${total.toLocaleString()} BDT\n`;
+            text += `*Delivery:* Pathao Inside Dhaka (Will be added)\n\n`;
+            text += `----------------------\n`;
+            text += `💳 *PAYMENT INSTRUCTIONS:*\n`;
+            text += `I have sent ${total.toLocaleString()} BDT to your bKash.\n`;
+            text += `*PLEASE ATTACH THE BKASH SCREENSHOT / TRX ID WITH THIS MESSAGE!*`;
+
+            // URL Encode the text
+            const encodedText = encodeURIComponent(text);
+            
+            // Your WhatsApp Number here (include country code 880, no + sign)
+            // It's better this routes to YOU so you can track commission, then you forward to Babu Bhai.
+            const whatsappNumber = "8801XXXXXXXXX"; 
+
+            // Clear Cart
+            cart = [];
+            saveCart();
+            updateCartUI();
+            closeCheckout();
+
+            // Open WhatsApp
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodedText}`, '_blank');
+        }
+
+        // Run Init
+        init();
+    </script>
+</body>
+</html>
