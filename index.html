@@ -1,412 +1,982 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safwan's Premium Vapes</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#9333ea', // Purple-600
-                        primaryHover: '#a855f7', // Purple-500
-                        darkBg: '#0f172a', // Slate-900
-                        cardBg: '#1e293b', // Slate-800
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome -->
+    <title>Safwan's Vape Shop — New Market, Dhaka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Custom scrollbar for premium feel */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --border: #e5e5e5;
+            --text: #1a1a1a;
+            --text-secondary: #666;
+            --text-muted: #999;
+            --accent: #222;
+            --green: #25D366;
+            --red: #e74c3c;
+            --tag-bg: #f0f0f0;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- TOP BAR --- */
+        .top-bar {
+            background: var(--accent);
+            color: #fff;
+            font-size: 12px;
+            text-align: center;
+            padding: 8px 16px;
+            letter-spacing: 0.02em;
+        }
+        .top-bar span { opacity: 0.85; }
+
+        /* --- HEADER --- */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .logo small {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0;
+        }
+        .cart-btn {
+            position: relative;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            font-weight: 500;
+            transition: border-color 0.15s;
+        }
+        .cart-btn:hover { border-color: #aaa; }
+        .cart-badge {
+            background: var(--red);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+        .cart-badge:empty, .cart-badge[data-count="0"] { display: none; }
+
+        /* --- HERO --- */
+        .hero {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 20px 24px;
+        }
+        .hero h1 {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            max-width: 520px;
+        }
+        .trust-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 8px;
+        }
+        .trust-item i { font-size: 14px; }
+        .trust-item .fa-location-dot { color: #e74c3c; }
+        .trust-item .fa-truck { color: #3498db; }
+        .trust-item .fa-wallet { color: #e91e8e; }
+        .trust-item .fa-shield-check, .trust-item .fa-shield { color: #27ae60; }
+
+        /* --- PRODUCTS --- */
+        .section-label {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+        .products {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .product-img {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            position: relative;
+        }
+        .product-img .coming-soon {
+            font-size: 11px;
+            color: #fff;
+            background: rgba(0,0,0,0.45);
+            padding: 3px 10px;
+            border-radius: 4px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        .product-body {
+            padding: 16px;
+        }
+        .product-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--tag-bg);
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            line-height: 1.3;
+        }
+        .product-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .product-price {
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .product-price small {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        .add-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.15s;
+        }
+        .add-btn:hover { opacity: 0.8; }
+        .add-btn:active { transform: scale(0.97); }
+
+        /* --- INFO SECTION --- */
+        .info-section {
+            max-width: 960px;
+            margin: 40px auto 0;
+            padding: 0 20px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .info-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .info-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .info-card p, .info-card li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .info-card ul li::before {
+            content: "→ ";
+            color: var(--text-muted);
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 48px;
+        }
+        .footer a { color: var(--text-secondary); }
+
+        /* --- FLOATING WHATSAPP --- */
+        .wa-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 50;
+            background: var(--green);
+            color: #fff;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+            transition: transform 0.15s;
+        }
+        .wa-float:hover { transform: scale(1.08); }
+
+        /* --- CART SIDEBAR --- */
+        .cart-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .cart-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .cart-panel {
+            position: fixed;
+            top: 0; right: 0;
+            width: 100%; max-width: 400px;
+            height: 100%;
+            background: var(--surface);
+            z-index: 101;
+            transform: translateX(100%);
+            transition: transform 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+        }
+        .cart-panel.open { transform: translateX(0); }
+
+        .cart-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-header h2 { font-size: 16px; font-weight: 700; }
+        .cart-close {
+            background: none; border: none;
+            font-size: 20px; cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+        }
+        .cart-close:hover { color: var(--text); }
+
+        .cart-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+        }
+        .cart-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 60px 0;
+            font-size: 14px;
+        }
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+        .cart-item-color {
+            width: 48px; height: 48px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .cart-item-info { flex: 1; min-width: 0; }
+        .cart-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cart-item-price {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .qty-btn {
+            width: 28px; height: 28px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-family: inherit;
+        }
+        .qty-btn:hover { border-color: #aaa; }
+        .qty-val {
+            font-size: 14px;
+            font-weight: 600;
+            width: 20px;
+            text-align: center;
+        }
+        .cart-item-remove {
+            background: none; border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px;
+            margin-left: 4px;
+        }
+        .cart-item-remove:hover { color: var(--red); }
+
+        .cart-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.15s;
+        }
+        .checkout-btn:hover { opacity: 0.85; }
+        .checkout-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* --- CHECKOUT MODAL --- */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--surface);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+        .modal-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { font-size: 18px; font-weight: 700; }
+        .modal-close {
+            background: none; border: none;
+            font-size: 20px; cursor: pointer;
+            color: var(--text-muted);
+        }
+        .modal-body { padding: 24px; }
+
+        .bkash-box {
+            background: #e91e8e0d;
+            border: 1px solid #e91e8e30;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .bkash-box .label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #e91e8e;
+            margin-bottom: 6px;
+        }
+        .bkash-box .number {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .bkash-box .amount {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .bkash-box .amount strong {
+            color: var(--text);
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--bg);
+            transition: border-color 0.15s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #888;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .form-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .form-note strong { color: var(--text-secondary); }
+
+        .wa-checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: opacity 0.15s;
+        }
+        .wa-checkout-btn:hover { opacity: 0.9; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 22px; }
+            .products { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .product-img { height: 140px; font-size: 40px; }
+            .product-body { padding: 12px; }
+            .product-name { font-size: 14px; }
+            .product-price { font-size: 17px; }
+            .product-desc { display: none; }
+            .add-btn { padding: 8px 12px; font-size: 12px; }
+            .trust-row { gap: 8px; }
+            .trust-item { font-size: 12px; padding: 6px 10px; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Subtle add animation */
+        @keyframes addPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        .cart-badge.pulse { animation: addPulse 0.3s ease; }
     </style>
 </head>
-<body class="bg-darkBg text-gray-100 font-sans antialiased min-h-screen flex flex-col">
+<body>
 
-    <!-- 18+ Verification Modal -->
-    <div id="age-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="bg-cardBg p-8 rounded-2xl shadow-2xl max-w-sm w-full mx-4 border border-gray-700 text-center">
-            <i class="fa-solid fa-triangle-exclamation text-4xl text-yellow-500 mb-4"></i>
-            <h2 class="text-2xl font-bold mb-2">Age Verification</h2>
-            <p class="text-gray-400 mb-6">You must be 18 years or older to enter this site.</p>
-            <div class="flex gap-4 justify-center">
-                <button onclick="closeAgeModal()" class="bg-primary hover:bg-primaryHover text-white px-6 py-2 rounded-lg font-semibold transition">I am 18+</button>
-                <button onclick="window.location.href='https://google.com'" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition">Exit</button>
+    <!-- Top announcement bar -->
+    <div class="top-bar">
+        <span>ঢাকার ভিতরে Pathao ডেলিভারি — অর্ডার করুন WhatsApp এ ✓</span>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                Safwan's Vape Shop
+                <small>New Market, Dhaka</small>
+            </a>
+            <button class="cart-btn" onclick="toggleCart()">
+                <i class="fa-solid fa-bag-shopping"></i>
+                Bag
+                <span class="cart-badge" id="cart-badge" data-count="0"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Authentic vapes, straight from<br>New Market to your door.</h1>
+        <p>আমাদের শপ থেকে সরাসরি — ১০০% অরিজিনাল প্রোডাক্ট। bKash এ পেমেন্ট করুন, Pathao তে ডেলিভারি পান।</p>
+        <div class="trust-row">
+            <div class="trust-item"><i class="fa-solid fa-location-dot"></i> New Market, Dhaka</div>
+            <div class="trust-item"><i class="fa-solid fa-truck"></i> Pathao Delivery</div>
+            <div class="trust-item"><i class="fa-solid fa-wallet"></i> bKash Payment</div>
+            <div class="trust-item"><i class="fa-solid fa-shield"></i> 100% Original</div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <div class="section-label">Our Collection — ৬টি সিলেক্টেড প্রোডাক্ট</div>
+    <div class="products" id="product-grid"></div>
+
+    <!-- Info Section -->
+    <div class="info-section">
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>🛒 কিভাবে অর্ডার করবেন?</h3>
+                <ul>
+                    <li>প্রোডাক্ট সিলেক্ট করে Bag এ যোগ করুন</li>
+                    <li>Checkout এ নাম, ফোন ও ঠিকানা দিন</li>
+                    <li>bKash এ Send Money করুন</li>
+                    <li>WhatsApp এ স্ক্রিনশট পাঠান — ব্যাস!</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h3>🚚 ডেলিভারি ও পেমেন্ট</h3>
+                <ul>
+                    <li>ঢাকার ভিতরে ১-২ দিনে Pathao ডেলিভারি</li>
+                    <li>ডেলিভারি চার্জ: Pathao রেট অনুযায়ী</li>
+                    <li>পেমেন্ট: bKash Send Money (Advance)</li>
+                    <li>অর্ডার কনফার্ম হলে WhatsApp এ জানানো হবে</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h3>📍 শপের ঠিকানা</h3>
+                <p>New Market, Dhaka<br>
+                (ভিজিট করেও কিনতে পারবেন)<br><br>
+                যেকোনো প্রশ্ন থাকলে সরাসরি WhatsApp এ মেসেজ করুন। আমরা সবসময় available আছি।</p>
             </div>
         </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="glass sticky top-0 z-40 border-b border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black tracking-tighter flex items-center gap-2">
-                <i class="fa-solid fa-cloud text-primary"></i>
-                <span>SAFWAN<span class="text-primary">VAPES</span></span>
-            </div>
-            <button onclick="toggleCart()" class="relative p-2 text-gray-300 hover:text-white transition">
-                <i class="fa-solid fa-cart-shopping text-xl"></i>
-                <span id="cart-count" class="absolute top-0 right-0 bg-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center translate-x-1 -translate-y-1 scale-0 transition-transform">0</span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="max-w-6xl mx-auto px-4 py-12 md:py-20 text-center">
-        <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">Premium Vaping Experience. <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">Delivered to your door.</span></h1>
-        <p class="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">Curated selection of the top authentic kits and premium e-liquids. Fast Pathao delivery across Dhaka.</p>
-        <div class="flex items-center justify-center gap-6 text-sm text-gray-300 font-medium">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-green-500"></i> 100% Authentic</span>
-            <span class="flex items-center gap-2"><i class="fa-solid fa-truck-fast text-blue-500"></i> Fast Delivery</span>
-        </div>
-    </header>
-
-    <!-- Product Grid -->
-    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-bold">Featured Collection</h2>
-            <div class="h-1 w-20 bg-primary rounded"></div>
-        </div>
-        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Products injected by JS -->
-        </div>
-    </main>
-
     <!-- Footer -->
-    <footer class="border-t border-gray-800 mt-12 py-8 text-center text-gray-500 text-sm">
-        <p>&copy; 2026 Safwan Vapes. All rights reserved.</p>
-        <p class="mt-2">Warning: This product contains nicotine. Nicotine is an addictive chemical.</p>
+    <footer class="footer">
+        <p>© 2026 Safwan's Vape Shop — New Market, Dhaka</p>
+        <p style="margin-top: 6px;">This product contains nicotine. Adults (18+) only.</p>
     </footer>
 
-    <!-- Cart Overlay & Sidebar -->
-    <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity" onclick="toggleCart()"></div>
-    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full max-w-md bg-cardBg border-l border-gray-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
-        <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-900/50">
-            <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-primary"></i> Your Cart</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/8801XXXXXXXXX" target="_blank" class="wa-float" title="WhatsApp এ মেসেজ করুন">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-panel" id="cart-panel">
+        <div class="cart-header">
+            <h2>Your Bag</h2>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
         </div>
-        <div id="cart-items" class="flex-grow p-6 overflow-y-auto flex flex-col gap-4">
-            <!-- Cart items injected here -->
-            <div class="text-center text-gray-500 mt-10" id="empty-cart-msg">Your cart is empty.</div>
+        <div class="cart-body" id="cart-body">
+            <div class="cart-empty" id="cart-empty">কোনো প্রোডাক্ট যোগ করা হয়নি।</div>
         </div>
-        <div class="p-6 border-t border-gray-800 bg-gray-900/50">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-gray-400">Subtotal</span>
-                <span class="font-bold text-lg" id="cart-subtotal">0 BDT</span>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total">৳0</span>
             </div>
-            <div class="flex justify-between items-center mb-6">
-                <span class="text-gray-400 text-sm">Delivery (Pathao)</span>
-                <span class="text-gray-400 text-sm">Calculated later</span>
-            </div>
-            <button onclick="openCheckout()" id="checkout-btn" class="w-full bg-primary hover:bg-primaryHover text-white py-4 rounded-xl font-bold text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/20" disabled>
-                Proceed to Checkout
+            <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>
+                Checkout — অর্ডার করুন
             </button>
         </div>
     </div>
 
     <!-- Checkout Modal -->
-    <div id="checkout-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity">
-        <div class="bg-cardBg rounded-2xl shadow-2xl max-w-lg w-full mx-4 border border-gray-700 flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-cardBg rounded-t-2xl z-10">
-                <h2 class="text-2xl font-bold">Checkout</h2>
-                <button onclick="closeCheckout()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <div class="modal-overlay" id="checkout-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>অর্ডার কনফার্ম করুন</h2>
+                <button class="modal-close" onclick="closeCheckout()">✕</button>
             </div>
-            
-            <div class="p-6 overflow-y-auto">
-                <!-- Payment Instructions -->
-                <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 mb-6">
-                    <h3 class="font-bold text-blue-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-wallet"></i> bKash Payment Info</h3>
-                    <p class="text-sm text-gray-300 mb-2">Please Send Money to our official bKash Personal number:</p>
-                    <div class="text-2xl font-mono font-bold text-white bg-gray-900 py-2 px-4 rounded-lg text-center mb-2 tracking-widest">017XX-XXXXXX</div>
-                    <p class="text-xs text-gray-400">Total to send: <strong class="text-white text-sm" id="checkout-total-display">0 BDT</strong> (+ Pathao fee upon delivery)</p>
+            <div class="modal-body">
+                <div class="bkash-box">
+                    <div class="label">bKash Send Money</div>
+                    <div class="number">017XX-XXXXXX</div>
+                    <div class="amount">Amount: <strong id="modal-total">৳0</strong></div>
                 </div>
 
-                <!-- Shipping Form -->
-                <form id="checkout-form" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
-                        <input type="text" id="cust-name" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition" placeholder="e.g. Safwan">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Phone Number</label>
-                        <input type="tel" id="cust-phone" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition" placeholder="01...">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Detailed Address</label>
-                        <textarea id="cust-address" required rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition" placeholder="House/Flat, Road, Area..."></textarea>
-                    </div>
-                </form>
-
-                <div class="mt-6 p-4 bg-gray-900/50 rounded-xl border border-gray-800 text-sm text-gray-400">
-                    <i class="fa-solid fa-info-circle text-primary"></i> <strong>Next Step:</strong> Clicking the button below will open WhatsApp. Please attach your bKash screenshot there!
+                <div class="form-group">
+                    <label>আপনার নাম</label>
+                    <input type="text" id="f-name" placeholder="Full name">
                 </div>
-            </div>
-            
-            <div class="p-6 border-t border-gray-800 sticky bottom-0 bg-cardBg rounded-b-2xl">
-                <button onclick="submitOrder()" class="w-full bg-[#25D366] hover:bg-[#1ebd5a] text-white py-4 rounded-xl font-bold text-lg transition flex items-center justify-center gap-3 shadow-lg shadow-[#25D366]/20">
-                    <i class="fa-brands fa-whatsapp text-2xl"></i> Confirm via WhatsApp
+                <div class="form-group">
+                    <label>ফোন নম্বর</label>
+                    <input type="tel" id="f-phone" placeholder="01...">
+                </div>
+                <div class="form-group">
+                    <label>ডেলিভারি ঠিকানা</label>
+                    <textarea id="f-address" placeholder="বাসা, রোড, এলাকা..."></textarea>
+                </div>
+
+                <div class="form-note">
+                    <strong>পরের স্টেপ:</strong> নিচের বাটনে ক্লিক করলে WhatsApp ওপেন হবে। সেখানে আপনার bKash এর স্ক্রিনশট অ্যাটাচ করে পাঠিয়ে দিন।
+                </div>
+
+                <button class="wa-checkout-btn" onclick="submitOrder()">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 22px;"></i>
+                    WhatsApp এ অর্ডার পাঠান
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. PRODUCT DATA ---
-        // You can update these 5-7 items as per Babu Bhai's actual stock
+        // ============ PRODUCT DATA ============
+        // Replace these with real product names, prices, and colors when ready
+        // Colors are used as placeholder card backgrounds until real photos are added
         const products = [
-            { id: 1, name: "Uwell Caliburn G3 Pod Kit", category: "Full Kit", price: 3050, image: "https://images.unsplash.com/photo-1536294528148-9f20e729a671?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-            { id: 2, name: "Vaporesso XROS 3 Kit", category: "Full Kit", price: 3250, image: "https://images.unsplash.com/photo-1629851602492-36c5354ee110?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-            { id: 3, name: "OXVA Xlim Pro Pod Kit", category: "Full Kit", price: 3550, image: "https://images.unsplash.com/photo-1536294528148-9f20e729a671?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-            { id: 4, name: "RELX Infinity 2 Device", category: "Device Only", price: 2050, image: "https://images.unsplash.com/photo-1629851602492-36c5354ee110?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-            { id: 5, name: "Vgod SaltNic Dry Tobacco 30ml", category: "E-Liquid", price: 1550, image: "https://images.unsplash.com/photo-1579298245158-33e8f568f7d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-            { id: 6, name: "Caliburn G3 Replacement Pods (4pcs)", category: "Accessories", price: 1250, image: "https://images.unsplash.com/photo-1579298245158-33e8f568f7d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" }
+            {
+                id: 1,
+                name: "Uwell Caliburn G3",
+                category: "Pod Kit",
+                desc: "Top-fill pod system, 900mAh",
+                price: 3050,
+                color: "#2d3436",
+                emoji: "🖤"
+            },
+            {
+                id: 2,
+                name: "Vaporesso XROS 3",
+                category: "Pod Kit",
+                desc: "Adjustable airflow, Type-C",
+                price: 3250,
+                color: "#0c2461",
+                emoji: "💙"
+            },
+            {
+                id: 3,
+                name: "OXVA Xlim Pro",
+                category: "Pod Kit",
+                desc: "0.96\" display, 1000mAh",
+                price: 3550,
+                color: "#4a148c",
+                emoji: "💜"
+            },
+            {
+                id: 4,
+                name: "RELX Infinity 2",
+                category: "Device",
+                desc: "Pre-filled pods, smooth draw",
+                price: 2050,
+                color: "#1a1a2e",
+                emoji: "⚫"
+            },
+            {
+                id: 5,
+                name: "Vgod SaltNic Dry Tobacco 30ml",
+                category: "E-Liquid",
+                desc: "Salt nicotine, 30mg/50mg",
+                price: 1550,
+                color: "#5d4037",
+                emoji: "🟤"
+            },
+            {
+                id: 6,
+                name: "Caliburn G3 Pods (4pcs)",
+                category: "Accessories",
+                desc: "0.6Ω / 0.9Ω replacement",
+                price: 1250,
+                color: "#37474f",
+                emoji: "⬛"
+            }
         ];
 
-        let cart = [];
+        let cart = JSON.parse(localStorage.getItem('sv_cart') || '[]');
 
-        // --- 2. INITIALIZATION ---
-        function init() {
-            renderProducts();
-            loadCart();
-        }
-
-        // Age Verification Modal Logic
-        function closeAgeModal() {
-            document.getElementById('age-modal').style.display = 'none';
-        }
-
-        // Render products to the grid
+        // ============ RENDER ============
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.map(p => `
-                <div class="bg-cardBg border border-gray-800 rounded-2xl overflow-hidden hover:border-primary transition duration-300 group shadow-lg">
-                    <div class="h-64 overflow-hidden relative bg-gray-900">
-                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition duration-500 mix-blend-screen">
-                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold text-primary border border-primary/30">
-                            ${p.category}
-                        </div>
+                <div class="product-card">
+                    <div class="product-img" style="background:${p.color};">
+                        <span style="filter:grayscale(0.3);">${p.emoji}</span>
+                        <span class="coming-soon">photo coming soon</span>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 text-white">${p.name}</h3>
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-2xl font-black text-gray-200">${p.price.toLocaleString()} <span class="text-sm font-normal text-gray-500">BDT</span></span>
-                            <button onclick="addToCart(${p.id})" class="bg-gray-800 hover:bg-primary text-white p-3 rounded-xl transition duration-300">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
+                    <div class="product-body">
+                        <span class="product-tag">${p.category}</span>
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-desc">${p.desc}</div>
+                        <div class="product-footer">
+                            <div class="product-price">৳${p.price.toLocaleString()} <small>BDT</small></div>
+                            <button class="add-btn" onclick="addToCart(${p.id})">+ Add</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // --- 3. CART LOGIC ---
+        // ============ CART ============
         function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            const existingItem = cart.find(item => item.id === id);
-            
-            if (existingItem) {
-                existingItem.qty += 1;
-            } else {
-                cart.push({ ...product, qty: 1 });
-            }
-            
+            const p = products.find(x => x.id === id);
+            const existing = cart.find(x => x.id === id);
+            if (existing) existing.qty++;
+            else cart.push({ ...p, qty: 1 });
             saveCart();
             updateCartUI();
-            
-            // Auto open cart on add
-            if(document.getElementById('cart-sidebar').classList.contains('translate-x-full')) {
-                toggleCart();
-            }
+            // open cart
+            openCartPanel();
         }
 
         function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
+            cart = cart.filter(x => x.id !== id);
             saveCart();
             updateCartUI();
         }
 
-        function changeQty(id, delta) {
-            const item = cart.find(item => item.id === id);
-            if (item) {
-                item.qty += delta;
-                if (item.qty <= 0) removeFromCart(id);
-            }
+        function changeQty(id, d) {
+            const item = cart.find(x => x.id === id);
+            if (!item) return;
+            item.qty += d;
+            if (item.qty <= 0) return removeFromCart(id);
             saveCart();
-            updateCartUI();
-        }
-
-        function loadCart() {
-            const saved = localStorage.getItem('safwan_cart');
-            if (saved) cart = JSON.parse(saved);
             updateCartUI();
         }
 
         function saveCart() {
-            localStorage.setItem('safwan_cart', JSON.stringify(cart));
+            localStorage.setItem('sv_cart', JSON.stringify(cart));
+        }
+
+        function getTotal() {
+            return cart.reduce((s, i) => s + i.price * i.qty, 0);
         }
 
         function updateCartUI() {
-            const cartItems = document.getElementById('cart-items');
-            const cartCount = document.getElementById('cart-count');
-            const subtotalEl = document.getElementById('cart-subtotal');
-            const checkoutBtn = document.getElementById('checkout-btn');
-            const emptyMsg = document.getElementById('empty-cart-msg');
+            const badge = document.getElementById('cart-badge');
+            const body = document.getElementById('cart-body');
+            const empty = document.getElementById('cart-empty');
+            const totalEl = document.getElementById('cart-total');
+            const btn = document.getElementById('checkout-btn');
 
-            // Update badge
-            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-            cartCount.textContent = totalItems;
-            if (totalItems > 0) {
-                cartCount.classList.remove('scale-0');
-                cartCount.classList.add('scale-100');
-            } else {
-                cartCount.classList.remove('scale-100');
-                cartCount.classList.add('scale-0');
-            }
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            badge.textContent = count;
+            badge.dataset.count = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
 
-            // Calculate Total
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            subtotalEl.textContent = `${total.toLocaleString()} BDT`;
+            // pulse animation
+            badge.classList.remove('pulse');
+            void badge.offsetWidth;
+            badge.classList.add('pulse');
 
-            // Toggle Checkout Button
-            checkoutBtn.disabled = cart.length === 0;
+            totalEl.textContent = `৳${getTotal().toLocaleString()}`;
+            btn.disabled = cart.length === 0;
 
-            // Render Items
+            // clear items (keep empty msg)
+            body.querySelectorAll('.cart-item').forEach(el => el.remove());
+
             if (cart.length === 0) {
-                emptyMsg.style.display = 'block';
-                // Remove all item nodes
-                Array.from(cartItems.children).forEach(child => {
-                    if (child.id !== 'empty-cart-msg') child.remove();
-                });
+                empty.style.display = 'block';
             } else {
-                emptyMsg.style.display = 'none';
-                
-                // Clear old items
-                Array.from(cartItems.children).forEach(child => {
-                    if (child.id !== 'empty-cart-msg') child.remove();
-                });
-
+                empty.style.display = 'none';
                 cart.forEach(item => {
                     const el = document.createElement('div');
-                    el.className = "flex gap-4 p-4 bg-gray-900 rounded-xl border border-gray-800";
+                    el.className = 'cart-item';
                     el.innerHTML = `
-                        <img src="${item.image}" class="w-20 h-20 object-cover rounded-lg mix-blend-screen opacity-80" alt="${item.name}">
-                        <div class="flex-grow flex flex-col justify-between">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-sm leading-tight text-white pr-4">${item.name}</h4>
-                                <button onclick="removeFromCart(${item.id})" class="text-gray-500 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-primary font-bold">${item.price.toLocaleString()} BDT</span>
-                                <div class="flex items-center gap-3 bg-cardBg rounded-lg px-2 border border-gray-700">
-                                    <button onclick="changeQty(${item.id}, -1)" class="text-gray-400 hover:text-white px-1 py-1"><i class="fa-solid fa-minus text-xs"></i></button>
-                                    <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
-                                    <button onclick="changeQty(${item.id}, 1)" class="text-gray-400 hover:text-white px-1 py-1"><i class="fa-solid fa-plus text-xs"></i></button>
-                                </div>
-                            </div>
+                        <div class="cart-item-color" style="background:${item.color};border-radius:8px;"></div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">৳${(item.price * item.qty).toLocaleString()}</div>
                         </div>
+                        <div class="cart-item-controls">
+                            <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+                            <span class="qty-val">${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Remove"><i class="fa-solid fa-trash-can"></i></button>
                     `;
-                    cartItems.appendChild(el);
+                    body.appendChild(el);
                 });
             }
         }
 
-        // --- 4. UI INTERACTIONS ---
+        // ============ CART PANEL ============
+        function openCartPanel() {
+            document.getElementById('cart-overlay').classList.add('open');
+            document.getElementById('cart-panel').classList.add('open');
+        }
         function toggleCart() {
-            const sidebar = document.getElementById('cart-sidebar');
             const overlay = document.getElementById('cart-overlay');
-            
-            if (sidebar.classList.contains('translate-x-full')) {
-                // Open
-                sidebar.classList.remove('translate-x-full');
-                overlay.classList.remove('hidden');
-                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            const panel = document.getElementById('cart-panel');
+            if (panel.classList.contains('open')) {
+                overlay.classList.remove('open');
+                panel.classList.remove('open');
             } else {
-                // Close
-                sidebar.classList.add('translate-x-full');
-                overlay.classList.add('opacity-0');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
+                openCartPanel();
             }
         }
 
+        // ============ CHECKOUT ============
         function openCheckout() {
             if (cart.length === 0) return;
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            document.getElementById('checkout-total-display').textContent = `${total.toLocaleString()} BDT`;
-            
-            toggleCart(); // Close cart
-            const modal = document.getElementById('checkout-modal');
-            modal.classList.remove('hidden');
-            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            toggleCart(); // close cart
+            document.getElementById('modal-total').textContent = `৳${getTotal().toLocaleString()}`;
+            document.getElementById('checkout-modal').classList.add('open');
         }
 
         function closeCheckout() {
-            const modal = document.getElementById('checkout-modal');
-            modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+            document.getElementById('checkout-modal').classList.remove('open');
         }
 
-        // --- 5. WHATSAPP GENERATION ---
         function submitOrder() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const address = document.getElementById('cust-address').value;
+            const name = document.getElementById('f-name').value.trim();
+            const phone = document.getElementById('f-phone').value.trim();
+            const address = document.getElementById('f-address').value.trim();
 
             if (!name || !phone || !address) {
-                alert("Please fill in your name, phone number, and address.");
+                alert('Please fill in all fields / সব তথ্য দিন');
                 return;
             }
 
-            // Build Message
-            let text = `🛍 *NEW ORDER - SAFWAN VAPES*\n\n`;
-            text += `*Customer Details:*\n`;
-            text += `Name: ${name}\n`;
-            text += `Phone: ${phone}\n`;
-            text += `Address: ${address}\n\n`;
-            
-            text += `*Order Items:*\n`;
-            let total = 0;
+            let msg = `*নতুন অর্ডার — Safwan's Vape Shop*\n\n`;
+            msg += `👤 *Customer:* ${name}\n`;
+            msg += `📞 *Phone:* ${phone}\n`;
+            msg += `📍 *Address:* ${address}\n\n`;
+            msg += `📦 *Items:*\n`;
+
             cart.forEach(item => {
-                const itemTotal = item.price * item.qty;
-                text += `• ${item.qty}x ${item.name} - ${itemTotal.toLocaleString()} BDT\n`;
-                total += itemTotal;
+                msg += `• ${item.qty}x ${item.name} — ৳${(item.price * item.qty).toLocaleString()}\n`;
             });
-            
-            text += `\n*Subtotal:* ${total.toLocaleString()} BDT\n`;
-            text += `*Delivery:* Pathao Inside Dhaka (Will be added)\n\n`;
-            text += `----------------------\n`;
-            text += `💳 *PAYMENT INSTRUCTIONS:*\n`;
-            text += `I have sent ${total.toLocaleString()} BDT to your bKash.\n`;
-            text += `*PLEASE ATTACH THE BKASH SCREENSHOT / TRX ID WITH THIS MESSAGE!*`;
 
-            // URL Encode the text
-            const encodedText = encodeURIComponent(text);
-            
-            // Your WhatsApp Number here (include country code 880, no + sign)
-            // It's better this routes to YOU so you can track commission, then you forward to Babu Bhai.
-            const whatsappNumber = "8801XXXXXXXXX"; 
+            const total = getTotal();
+            msg += `\n💰 *Total:* ৳${total.toLocaleString()}\n`;
+            msg += `🚚 *Delivery:* Pathao (চার্জ আলাদা)\n\n`;
+            msg += `আমি ৳${total.toLocaleString()} bKash এ Send Money করেছি।\n`;
+            msg += `*Screenshot / TrxID এই মেসেজের সাথে attach করছি।*`;
 
-            // Clear Cart
+            const encoded = encodeURIComponent(msg);
+            const waNumber = "8801XXXXXXXXX"; // Your number
+
             cart = [];
             saveCart();
             updateCartUI();
             closeCheckout();
 
-            // Open WhatsApp
-            window.open(`https://wa.me/${whatsappNumber}?text=${encodedText}`, '_blank');
+            window.open(`https://wa.me/${waNumber}?text=${encoded}`, '_blank');
         }
 
-        // Run Init
-        init();
+        // ============ INIT ============
+        renderProducts();
+        updateCartUI();
     </script>
 </body>
 </html>
