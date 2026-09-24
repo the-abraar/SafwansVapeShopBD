@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "name": "Uwell Caliburn G3 Pod Kit",
+    "category": "Pod System",
+    "desc": "Next-gen Caliburn with integrated coil cartridge, OLED display, and dual firing mechanism.",
+    "specs": ["900mAh Battery", "2.5ml Top-Fill", "OLED Screen", "0.6Ω / 0.9Ω Mesh"],
+    "price": 3050,
+    "badge": "100% Genuine Sealed",
+    "color": "#06b6d4",
+    "bgGradient": "linear-gradient(135deg, #09203f 0%, #1e3c72 100%)",
+    "svgType": "caliburn-g3",
+    "inStock": true
+  },
+  {
+    "id": 2,
+    "name": "Vaporesso XROS 3 Pod Kit",
+    "category": "Pod System",
+    "desc": "Precision airflow slider, AXON chip pulse mode, and SSS leak-resistant tech for unmatched flavor.",
+    "specs": ["1000mAh Battery", "AXON Pulse Mode", "Neon Battery Indicator", "Top Clamshell Fill"],
+    "price": 3250,
+    "badge": "Authentic Sealed",
+    "color": "#3b82f6",
+    "bgGradient": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
+    "svgType": "xros-3",
+    "inStock": true
+  },
+  {
+    "id": 3,
+    "name": "OXVA Xlim Pro Pod Kit",
+    "category": "Pro Pod Mod",
+    "desc": "Flagship 30W pro pod kit with dazzling RGB light glow, 0.42\" OLED screen, and top-fill anti-leak pods.",
+    "specs": ["30W Max Output", "1000mAh Battery", "RGB Glow Lighting", "0.42\" OLED Display"],
+    "price": 3550,
+    "badge": "Top Seller • Verified",
+    "color": "#8b5cf6",
+    "bgGradient": "linear-gradient(135deg, #1f1c2c 0%, #302b63 100%)",
+    "svgType": "oxva-xlim-pro",
+    "inStock": true
+  },
+  {
+    "id": 4,
+    "name": "RELX Infinity 2 Device",
+    "category": "Closed Pod",
+    "desc": "Ultra-ergonomic aluminum unibody with 3-level power adjustment and ultra-fast charging.",
+    "specs": ["3 Power Modes", "SuperFast USB-C", "SmartPace Vibration", "Leak-Resistant Maze"],
+    "price": 2050,
+    "badge": "100% Genuine",
+    "color": "#ec4899",
+    "bgGradient": "linear-gradient(135deg, #200122 0%, #3c093a 100%)",
+    "svgType": "relx-infinity-2",
+    "inStock": true
+  },
+  {
+    "id": 5,
+    "name": "VGOD SaltNic Dry Tobacco 30ml",
+    "category": "Salt Nicotine",
+    "desc": "Authentic cured American tobacco aroma with a smooth, robust throat hit. USA formulated.",
+    "specs": ["30ml Chubby Bottle", "25mg / 50mg", "USA Authentic Batch", "Child-Proof Cap"],
+    "price": 1550,
+    "badge": "Original USA Batch",
+    "color": "#f59e0b",
+    "bgGradient": "linear-gradient(135deg, #2c1b0a 0%, #4a2f13 100%)",
+    "svgType": "vgod-salts",
+    "inStock": true
+  },
+  {
+    "id": 6,
+    "name": "Caliburn G3 Replacement Pods (4-Pack)",
+    "category": "Coils & Pods",
+    "desc": "Official Uwell replacement cartridges featuring Pro-FOCS flavor technology and ultrasonic welding.",
+    "specs": ["Pack of 4 Pods", "0.6Ω or 0.9Ω", "2.5ml Capacity", "Magnetic Connection"],
+    "price": 1250,
+    "badge": "Factory Sealed 4-Pack",
+    "color": "#10b981",
+    "bgGradient": "linear-gradient(135deg, #06281c 0%, #0d4a36 100%)",
+    "svgType": "caliburn-g3-pods",
+    "inStock": true
+  }
+]

@@ -21,8 +21,13 @@
 
 ## 🚀 Immediate Next Steps (Pending)
 
-### 1. Operations & Coordination with Babu Bhai
-- [ ] **Collect bKash Number:** Get Babu Bhai / Safwan's official bKash Personal Number and update in `index.html` (currently `017XX-XXXXXX`).
+- [x] Decouple frontend architecture into `styles.css`, `config.js`, `products.json`, and `app.js`
+- [x] Fix cart wiping flow bug; add order confirmation modal with WhatsApp re-open & ledger
+- [x] Implement 18+ Age Gate modal with local storage verification
+- [x] Implement Hybrid Payment (bKash Advance + Pathao COD) and selectable delivery pricing
+- [x] Implement robust Bangladeshi phone validation (`/^01[3-9]\d{8}$/`) and modern toast notifications
+- [x] Upgrade placeholder cards with sleek vector SVG product art & authenticity specs
+- [ ] **Collect bKash Number:** Get Babu Bhai / Safwan's official bKash Personal Number and update in `config.js` (currently `017XX-XXXXXX`).
 - [ ] **Finalize 5–7 Models & Pricing:** Confirm the exact top-selling models, store retail prices, and customer selling prices (including markup).
 - [ ] **Product Photos:** Get 1–2 clear, real photos per product taken directly inside the New Market shop (replace the temporary placeholder boxes).
 - [ ] **Pathao Logistics:** Confirm whether Pathao parcels will be booked through Babu Bhai's merchant account or through Abrar's app with pickup at New Market.

@@ -3,980 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safwan's Vape Shop — New Market, Dhaka</title>
+    <title>Safwan's Vape Shop BD — 100% Genuine & Sealed Guarantee</title>
+    <meta name="description" content="Authentic vape pod kits, devices, and salt nicotine liquids in Dhaka. 100% factory sealed with scratch-off batch verification. Fast Pathao delivery & store pickup.">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg: #fafafa;
-            --surface: #ffffff;
-            --border: #e5e5e5;
-            --text: #1a1a1a;
-            --text-secondary: #666;
-            --text-muted: #999;
-            --accent: #222;
-            --green: #25D366;
-            --red: #e74c3c;
-            --tag-bg: #f0f0f0;
-        }
-
-        body {
-            font-family: 'Inter', 'Noto Sans Bengali', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* --- TOP BAR --- */
-        .top-bar {
-            background: var(--accent);
-            color: #fff;
-            font-size: 12px;
-            text-align: center;
-            padding: 8px 16px;
-            letter-spacing: 0.02em;
-        }
-        .top-bar span { opacity: 0.85; }
-
-        /* --- HEADER --- */
-        .header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 40;
-        }
-        .header-inner {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            color: var(--text);
-            text-decoration: none;
-        }
-        .logo small {
-            display: block;
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--text-muted);
-            letter-spacing: 0;
-        }
-        .cart-btn {
-            position: relative;
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 14px;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: inherit;
-            font-weight: 500;
-            transition: border-color 0.15s;
-        }
-        .cart-btn:hover { border-color: #aaa; }
-        .cart-badge {
-            background: var(--red);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 5px;
-        }
-        .cart-badge:empty, .cart-badge[data-count="0"] { display: none; }
-
-        /* --- HERO --- */
-        .hero {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 40px 20px 24px;
-        }
-        .hero h1 {
-            font-size: 26px;
-            font-weight: 800;
-            line-height: 1.25;
-            margin-bottom: 10px;
-            letter-spacing: -0.02em;
-        }
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 15px;
-            max-width: 520px;
-        }
-        .trust-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 8px 14px;
-            border-radius: 8px;
-        }
-        .trust-item i { font-size: 14px; }
-        .trust-item .fa-location-dot { color: #e74c3c; }
-        .trust-item .fa-truck { color: #3498db; }
-        .trust-item .fa-wallet { color: #e91e8e; }
-        .trust-item .fa-shield-check, .trust-item .fa-shield { color: #27ae60; }
-
-        /* --- PRODUCTS --- */
-        .section-label {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 32px 20px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-        }
-        .products {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        .product-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: box-shadow 0.2s;
-        }
-        .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-        .product-img {
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 56px;
-            position: relative;
-        }
-        .product-img .coming-soon {
-            font-size: 11px;
-            color: #fff;
-            background: rgba(0,0,0,0.45);
-            padding: 3px 10px;
-            border-radius: 4px;
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-        }
-        .product-body {
-            padding: 16px;
-        }
-        .product-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: var(--tag-bg);
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-        .product-name {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 2px;
-            line-height: 1.3;
-        }
-        .product-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-        .product-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .product-price {
-            font-size: 20px;
-            font-weight: 800;
-        }
-        .product-price small {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-        }
-        .add-btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: opacity 0.15s;
-        }
-        .add-btn:hover { opacity: 0.8; }
-        .add-btn:active { transform: scale(0.97); }
-
-        /* --- INFO SECTION --- */
-        .info-section {
-            max-width: 960px;
-            margin: 40px auto 0;
-            padding: 0 20px;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        .info-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-        }
-        .info-card h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .info-card p, .info-card li {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-        .info-card ul {
-            list-style: none;
-            padding: 0;
-        }
-        .info-card ul li::before {
-            content: "→ ";
-            color: var(--text-muted);
-        }
-
-        /* --- FOOTER --- */
-        .footer {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            margin-top: 48px;
-        }
-        .footer a { color: var(--text-secondary); }
-
-        /* --- FLOATING WHATSAPP --- */
-        .wa-float {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 50;
-            background: var(--green);
-            color: #fff;
-            width: 56px;
-            height: 56px;
-            border-radius: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            text-decoration: none;
-            box-shadow: 0 4px 16px rgba(37,211,102,0.35);
-            transition: transform 0.15s;
-        }
-        .wa-float:hover { transform: scale(1.08); }
-
-        /* --- CART SIDEBAR --- */
-        .cart-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-        .cart-overlay.open { opacity: 1; pointer-events: auto; }
-
-        .cart-panel {
-            position: fixed;
-            top: 0; right: 0;
-            width: 100%; max-width: 400px;
-            height: 100%;
-            background: var(--surface);
-            z-index: 101;
-            transform: translateX(100%);
-            transition: transform 0.25s ease;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid var(--border);
-        }
-        .cart-panel.open { transform: translateX(0); }
-
-        .cart-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .cart-header h2 { font-size: 16px; font-weight: 700; }
-        .cart-close {
-            background: none; border: none;
-            font-size: 20px; cursor: pointer;
-            color: var(--text-muted);
-            padding: 4px;
-        }
-        .cart-close:hover { color: var(--text); }
-
-        .cart-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 20px;
-        }
-        .cart-empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 60px 0;
-            font-size: 14px;
-        }
-        .cart-item {
-            display: flex;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-            align-items: center;
-        }
-        .cart-item-color {
-            width: 48px; height: 48px;
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
-        .cart-item-info { flex: 1; min-width: 0; }
-        .cart-item-name {
-            font-size: 14px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .cart-item-price {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .qty-btn {
-            width: 28px; height: 28px;
-            border: 1px solid var(--border);
-            background: var(--bg);
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text);
-            font-family: inherit;
-        }
-        .qty-btn:hover { border-color: #aaa; }
-        .qty-val {
-            font-size: 14px;
-            font-weight: 600;
-            width: 20px;
-            text-align: center;
-        }
-        .cart-item-remove {
-            background: none; border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 13px;
-            padding: 4px;
-            margin-left: 4px;
-        }
-        .cart-item-remove:hover { color: var(--red); }
-
-        .cart-footer {
-            padding: 16px 20px;
-            border-top: 1px solid var(--border);
-        }
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 14px;
-        }
-        .checkout-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            transition: opacity 0.15s;
-        }
-        .checkout-btn:hover { opacity: 0.85; }
-        .checkout-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        /* --- CHECKOUT MODAL --- */
-        .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.open { display: flex; }
-        .modal {
-            background: var(--surface);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 480px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-        }
-        .modal-header {
-            padding: 20px 24px 16px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h2 { font-size: 18px; font-weight: 700; }
-        .modal-close {
-            background: none; border: none;
-            font-size: 20px; cursor: pointer;
-            color: var(--text-muted);
-        }
-        .modal-body { padding: 24px; }
-
-        .bkash-box {
-            background: #e91e8e0d;
-            border: 1px solid #e91e8e30;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-        .bkash-box .label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #e91e8e;
-            margin-bottom: 6px;
-        }
-        .bkash-box .number {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-        .bkash-box .amount {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        .bkash-box .amount strong {
-            color: var(--text);
-        }
-
-        .form-group { margin-bottom: 16px; }
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-secondary);
-        }
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: inherit;
-            color: var(--text);
-            background: var(--bg);
-            transition: border-color 0.15s;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #888;
-        }
-        .form-group textarea { resize: vertical; min-height: 80px; }
-
-        .form-note {
-            font-size: 13px;
-            color: var(--text-muted);
-            background: var(--bg);
-            padding: 12px 14px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        .form-note strong { color: var(--text-secondary); }
-
-        .wa-checkout-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--green);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: opacity 0.15s;
-        }
-        .wa-checkout-btn:hover { opacity: 0.9; }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 22px; }
-            .products { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .product-img { height: 140px; font-size: 40px; }
-            .product-body { padding: 12px; }
-            .product-name { font-size: 14px; }
-            .product-price { font-size: 17px; }
-            .product-desc { display: none; }
-            .add-btn { padding: 8px 12px; font-size: 12px; }
-            .trust-row { gap: 8px; }
-            .trust-item { font-size: 12px; padding: 6px 10px; }
-            .info-grid { grid-template-columns: 1fr; }
-        }
-
-        /* Subtle add animation */
-        @keyframes addPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
-        .cart-badge.pulse { animation: addPulse 0.3s ease; }
-    </style>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Top announcement bar -->
+    <!-- Top Announcement Bar -->
     <div class="top-bar">
-        <span>ঢাকার ভিতরে Pathao ডেলিভারি — অর্ডার করুন WhatsApp এ ✓</span>
+        <span class="live-dot"></span>
+        <span>১০০% অথেনটিক সিল্ড প্রোডাক্টস • ঢাকার ভিতরে Pathao Express ডেলিভারি • শপ পিক-আপ সুবিধাসহ</span>
     </div>
 
     <!-- Header -->
     <header class="header">
         <div class="header-inner">
-            <a href="#" class="logo">
-                Safwan's Vape Shop
-                <small>New Market, Dhaka</small>
+            <a href="#" class="logo-wrapper">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Safwan's Vape Shop</h1>
+                    <span>100% Genuine & Sealed Pods • Dhaka Hub</span>
+                </div>
             </a>
-            <button class="cart-btn" onclick="toggleCart()">
+            
+            <button class="cart-btn" onclick="App.toggleCart()" aria-label="Shopping Bag">
                 <i class="fa-solid fa-bag-shopping"></i>
-                Bag
+                <span>Bag</span>
                 <span class="cart-badge" id="cart-badge" data-count="0"></span>
             </button>
         </div>
     </header>
 
-    <!-- Hero -->
+    <!-- Hero Section (Issue 4.2: Revise copy to remove negative New Market trust association) -->
     <section class="hero">
-        <h1>Authentic vapes, straight from<br>New Market to your door.</h1>
-        <p>আমাদের শপ থেকে সরাসরি — ১০০% অরিজিনাল প্রোডাক্ট। bKash এ পেমেন্ট করুন, Pathao তে ডেলিভারি পান।</p>
+        <div class="hero-pill">
+            <i class="fa-solid fa-shield-halved"></i> Batch Authentication Verified
+        </div>
+        <h1>
+            Premium Authentic Vapes & Pods.<br>
+            <span class="gradient-text">100% Factory Sealed Guarantee.</span>
+        </h1>
+        <p>
+            অথেনটিক ভ্যাপ কিটস এবং সল্ট লিকুইড—প্রতিটি বক্সে রয়েছে অফিসিয়াল স্ক্র্যাচ-অফ কিউআর কোড। 
+            ঢাকার ভিতরে দ্রুত Pathao Express হোম ডেলিভারি অথবা আমাদের ঢাকা হাব কাউন্টার থেকে সরাসরি কালেকশন করুন।
+        </p>
+
+        <!-- Trust Signals Row -->
         <div class="trust-row">
-            <div class="trust-item"><i class="fa-solid fa-location-dot"></i> New Market, Dhaka</div>
-            <div class="trust-item"><i class="fa-solid fa-truck"></i> Pathao Delivery</div>
-            <div class="trust-item"><i class="fa-solid fa-wallet"></i> bKash Payment</div>
-            <div class="trust-item"><i class="fa-solid fa-shield"></i> 100% Original</div>
+            <div class="trust-item">
+                <i class="fa-solid fa-shield-check icon-shield"></i>
+                <span>100% Sealed & Genuine</span>
+            </div>
+            <div class="trust-item">
+                <i class="fa-solid fa-qrcode icon-qr"></i>
+                <span>Scratch-off QR Verified</span>
+            </div>
+            <div class="trust-item">
+                <i class="fa-solid fa-truck-fast icon-truck"></i>
+                <span>Pathao Fast Delivery (৳80)</span>
+            </div>
+            <div class="trust-item">
+                <i class="fa-solid fa-shop icon-shop"></i>
+                <span>Store Pickup Available</span>
+            </div>
+            <div class="trust-item">
+                <i class="fa-solid fa-wallet icon-wallet"></i>
+                <span>Flexible Hybrid COD</span>
+            </div>
         </div>
     </section>
 
-    <!-- Products -->
-    <div class="section-label">Our Collection — ৬টি সিলেক্টেড প্রোডাক্ট</div>
-    <div class="products" id="product-grid"></div>
+    <!-- Products Collection (Issue 4.1: Modern product cards with SVG representations) -->
+    <section class="section-header">
+        <div class="section-title">
+            <i class="fa-solid fa-fire-flame-curved" style="color: var(--accent-amber);"></i>
+            Curated Collection
+        </div>
+        <div class="section-meta">
+            Top-Rated Devices & Refills
+        </div>
+    </section>
 
-    <!-- Info Section -->
-    <div class="info-section">
+    <div class="products" id="product-grid">
+        <!-- Rendered dynamically by app.js with SVG artwork and specifications -->
+    </div>
+
+    <!-- Info & Trust Guides -->
+    <section class="info-section">
         <div class="info-grid">
             <div class="info-card">
-                <h3>🛒 কিভাবে অর্ডার করবেন?</h3>
+                <div class="info-card-header">
+                    <div class="info-card-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <h3>সহজ ৩-স্টেপে অর্ডার করুন</h3>
+                </div>
                 <ul>
                     <li>প্রোডাক্ট সিলেক্ট করে Bag এ যোগ করুন</li>
-                    <li>Checkout এ নাম, ফোন ও ঠিকানা দিন</li>
-                    <li>bKash এ Send Money করুন</li>
-                    <li>WhatsApp এ স্ক্রিনশট পাঠান — ব্যাস!</li>
+                    <li>Checkout এ ডেলিভারি এরিয়া ও আপনার নাম-ঠিকানা দিন</li>
+                    <li>পেমেন্ট মেথড সিলেক্ট করে WhatsApp এ কনফার্ম করুন</li>
+                    <li>অর্ডার আইডি ট্র্যাকিং সহ পার্সেল ডিসপ্যাচ রিসিভ করুন</li>
                 </ul>
             </div>
+
             <div class="info-card">
-                <h3>🚚 ডেলিভারি ও পেমেন্ট</h3>
+                <div class="info-card-header">
+                    <div class="info-card-icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                    <h3>ডেলিভারি ও হাইব্রিড পেমেন্ট</h3>
+                </div>
                 <ul>
-                    <li>ঢাকার ভিতরে ১-২ দিনে Pathao ডেলিভারি</li>
-                    <li>ডেলিভারি চার্জ: Pathao রেট অনুযায়ী</li>
-                    <li>পেমেন্ট: bKash Send Money (Advance)</li>
-                    <li>অর্ডার কনফার্ম হলে WhatsApp এ জানানো হবে</li>
+                    <li><strong>ঢাকার ভিতরে:</strong> Pathao Express (৳80, ১-২ কার্যদিবস)</li>
+                    <li><strong>ঢাকার বাইরে:</strong> Pathao Courier (৳150, ২-৪ কার্যদিবস)</li>
+                    <li><strong>শপ পিক-আপ:</strong> ফ্রি কাউন্টার কালেকশন (৳0)</li>
+                    <li><strong>হাইব্রিড COD:</strong> মাত্র ৳150 bKash অগ্রিম দিয়ে বুক করুন, বাকি টাকা ক্যাশ অন ডেলিভারিতে দিন</li>
                 </ul>
             </div>
+
             <div class="info-card">
-                <h3>📍 শপের ঠিকানা</h3>
-                <p>New Market, Dhaka<br>
-                (ভিজিট করেও কিনতে পারবেন)<br><br>
-                যেকোনো প্রশ্ন থাকলে সরাসরি WhatsApp এ মেসেজ করুন। আমরা সবসময় available আছি।</p>
+                <div class="info-card-header">
+                    <div class="info-card-icon"><i class="fa-solid fa-certificate"></i></div>
+                    <h3>অথেনটিসিটি ও সাপোর্ট</h3>
+                </div>
+                <p>
+                    আমাদের প্রতিটি ডিভাইস ১০০% আনওপেনড এবং ফ্যাক্টরি সিল্ড। প্যাকেটের গায়ে থাকা সিকিউরিটি স্ক্র্যাচ কোড ঘষে সরাসরি অফিশিয়াল ওয়েবসাইটে ভেরিফাই করে নিতে পারবেন।
+                </p>
+                <p style="margin-top: 10px;">
+                    সরাসরি শপ কাউন্টারে এসে দেখে নিতে পারবেন: <em>New Market & Dhanmondi Hub, Dhaka</em>
+                </p>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>© 2026 Safwan's Vape Shop — New Market, Dhaka</p>
-        <p style="margin-top: 6px;">This product contains nicotine. Adults (18+) only.</p>
+        <div class="footer-badges">
+            <span class="footer-tag"><i class="fa-solid fa-ban"></i> 18+ Nicotine Warning</span>
+            <span class="footer-tag"><i class="fa-solid fa-lock"></i> SSL Secured WhatsApp Routing</span>
+            <span class="footer-tag"><i class="fa-solid fa-circle-check"></i> Authentic Sourced</span>
+        </div>
+        <p>© 2026 Safwan's Vape Shop BD — All Rights Reserved.</p>
+        <p style="margin-top: 8px; color: var(--text-muted); font-size: 12px;">
+            ⚠️ This product contains nicotine. Nicotine is an addictive chemical. Intended for adult consumers (18+) only.
+        </p>
+        <p style="margin-top: 6px; font-size: 12px;">
+            WhatsApp Support: <strong id="footer-phone">01327-045005</strong>
+        </p>
     </footer>
 
     <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/8801327045005" target="_blank" class="wa-float" title="WhatsApp এ মেসেজ করুন">
+    <a href="https://wa.me/8801327045005" target="_blank" rel="noopener noreferrer" class="wa-float" id="wa-floating-btn" title="WhatsApp এ মেসেজ করুন" aria-label="WhatsApp Support">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <!-- Cart Sidebar -->
-    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
-    <div class="cart-panel" id="cart-panel">
+    <!-- Cart Drawer Panel -->
+    <div class="cart-overlay" id="cart-overlay" onclick="App.toggleCart()"></div>
+    <div class="cart-panel" id="cart-panel" role="dialog" aria-labelledby="cart-heading">
         <div class="cart-header">
-            <h2>Your Bag</h2>
-            <button class="cart-close" onclick="toggleCart()">✕</button>
+            <h2 id="cart-heading"><i class="fa-solid fa-bag-shopping"></i> Your Bag</h2>
+            <button class="cart-close" onclick="App.toggleCart()" aria-label="Close cart">✕</button>
         </div>
         <div class="cart-body" id="cart-body">
-            <div class="cart-empty" id="cart-empty">কোনো প্রোডাক্ট যোগ করা হয়নি।</div>
+            <div class="cart-empty" id="cart-empty">
+                <div class="cart-empty-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                <p>আপনার ব্যাগে কোনো প্রোডাক্ট যোগ করা হয়নি।</p>
+            </div>
         </div>
         <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total</span>
+            <div class="cart-total-row">
+                <span>Items Subtotal</span>
                 <span id="cart-total">৳0</span>
             </div>
-            <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>
-                Checkout — অর্ডার করুন
+            <div class="cart-grand-total">
+                <span>Estimated Total</span>
+                <span id="cart-grand-total">৳0</span>
+            </div>
+            <button class="checkout-btn" id="checkout-btn" onclick="App.openCheckout()" disabled>
+                <span>Proceed to Checkout</span>
+                <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div class="modal-overlay" id="checkout-modal">
+    <!-- Checkout Modal (Issue 4.4 & Roadmap 3) -->
+    <div class="modal-overlay" id="checkout-modal" role="dialog" aria-labelledby="checkout-modal-title">
         <div class="modal">
             <div class="modal-header">
-                <h2>অর্ডার কনফার্ম করুন</h2>
-                <button class="modal-close" onclick="closeCheckout()">✕</button>
+                <h2 id="checkout-modal-title"><i class="fa-solid fa-file-invoice"></i> অর্ডার কনফার্মেশন</h2>
+                <button class="modal-close" onclick="App.closeCheckout()" aria-label="Close modal">✕</button>
             </div>
             <div class="modal-body">
+                
+                <!-- Step 1: Delivery Option Selection -->
+                <div class="section-subtitle-badge">
+                    <i class="fa-solid fa-truck"></i> ১. ডেলিভারি অপশন সিলেক্ট করুন
+                </div>
+                <div class="options-group" id="delivery-options-container">
+                    <!-- Populated dynamically from CONFIG.deliveryOptions -->
+                </div>
+
+                <!-- Step 2: Payment Method Selection -->
+                <div class="section-subtitle-badge">
+                    <i class="fa-solid fa-credit-card"></i> ২. পেমেন্ট মেথড সিলেক্ট করুন
+                </div>
+                <div class="options-group" id="payment-options-container">
+                    <!-- Populated dynamically from CONFIG.paymentOptions -->
+                </div>
+
+                <!-- Step 3: Calculation Breakdown -->
+                <div class="calc-breakdown-box">
+                    <div class="breakdown-line">
+                        <span>আইটেম সাবটোটাল:</span>
+                        <strong id="calc-subtotal">৳0</strong>
+                    </div>
+                    <div class="breakdown-line">
+                        <span>ডেলিভারি চার্জ:</span>
+                        <strong id="calc-delivery">৳80</strong>
+                    </div>
+                    <div class="breakdown-line highlight">
+                        <span>সর্বমোট অর্ডার মূল্য:</span>
+                        <strong id="calc-grand-total">৳0</strong>
+                    </div>
+                    <div class="breakdown-line advance-line">
+                        <span>bKash অগ্রিম প্রদেয়:</span>
+                        <strong id="calc-advance">৳150</strong>
+                    </div>
+                    <div class="breakdown-line cod-line">
+                        <span>ক্যাশ অন ডেলিভারি (বাকি টাকা):</span>
+                        <strong id="calc-cod">৳0</strong>
+                    </div>
+                </div>
+
+                <!-- bKash Send Money Box -->
                 <div class="bkash-box">
-                    <div class="label">bKash Send Money</div>
-                    <div class="number">017XX-XXXXXX</div>
-                    <div class="amount">Amount: <strong id="modal-total">৳0</strong></div>
+                    <div class="label">bKash Send Money (Personal)</div>
+                    <div class="bkash-number-row">
+                        <span class="number" id="bkash-number-display">017XX-XXXXXX</span>
+                        <button type="button" class="copy-btn" id="copy-bkash-btn" aria-label="Copy bKash number">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="amount-instruction">
+                        অগ্রিম পাঠানোর পরিমাণ: <strong id="modal-bkash-amount">৳150</strong>
+                    </div>
+                </div>
+
+                <!-- Step 4: Customer Details Form (Issue 3.4: Rigorous validation) -->
+                <div class="section-subtitle-badge">
+                    <i class="fa-solid fa-user-check"></i> ৩. আপনার ডেলিভারি তথ্য
+                </div>
+                
+                <div class="form-group">
+                    <label for="f-name">আপনার পূর্ণ নাম (Full Name) *</label>
+                    <input type="text" id="f-name" placeholder="যেমন: আবরার আহমেদ" autocomplete="name" required>
+                    <div class="form-error-msg" id="name-error"></div>
                 </div>
 
                 <div class="form-group">
-                    <label>আপনার নাম</label>
-                    <input type="text" id="f-name" placeholder="Full name">
+                    <label for="f-phone">মোবাইল নম্বর (Phone Number) *</label>
+                    <input type="tel" id="f-phone" placeholder="017XXXXXXXX" autocomplete="tel" required>
+                    <div class="form-error-msg" id="phone-error"></div>
                 </div>
+
                 <div class="form-group">
-                    <label>ফোন নম্বর</label>
-                    <input type="tel" id="f-phone" placeholder="01...">
-                </div>
-                <div class="form-group">
-                    <label>ডেলিভারি ঠিকানা</label>
-                    <textarea id="f-address" placeholder="বাসা, রোড, এলাকা..."></textarea>
+                    <label for="f-address">ডেলিভারি ঠিকানা (Detailed Address) *</label>
+                    <textarea id="f-address" placeholder="বাসা/হোল্ডিং নম্বর, রোড, এলাকা, জেলা (যেমন: House 12, Road 4, Dhanmondi, Dhaka)" autocomplete="street-address" required></textarea>
+                    <div class="form-error-msg" id="address-error"></div>
                 </div>
 
                 <div class="form-note">
-                    <strong>পরের স্টেপ:</strong> নিচের বাটনে ক্লিক করলে WhatsApp ওপেন হবে। সেখানে আপনার bKash এর স্ক্রিনশট অ্যাটাচ করে পাঠিয়ে দিন।
+                    <strong>কীভাবে সম্পন্ন করবেন:</strong> নিচের বাটনে চাপলে স্বয়ংক্রিয়ভাবে WhatsApp খুলবে। সেখানে আপনার bKash পেমেন্টের TrxID বা স্ক্রিনশট পাঠিয়ে দিলে অর্ডারটি তৎক্ষণাৎ ভেরিফাই করা হবে।
                 </div>
 
-                <button class="wa-checkout-btn" onclick="submitOrder()">
-                    <i class="fa-brands fa-whatsapp" style="font-size: 22px;"></i>
-                    WhatsApp এ অর্ডার পাঠান
+                <button class="wa-checkout-btn" id="wa-submit-btn" onclick="App.submitOrder()">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    WhatsApp এ অর্ডার কনফার্ম করুন
                 </button>
             </div>
         </div>
     </div>
 
-    <script>
-        // ============ PRODUCT DATA ============
-        // Replace these with real product names, prices, and colors when ready
-        // Colors are used as placeholder card backgrounds until real photos are added
-        const products = [
-            {
-                id: 1,
-                name: "Uwell Caliburn G3",
-                category: "Pod Kit",
-                desc: "Top-fill pod system, 900mAh",
-                price: 3050,
-                color: "#2d3436",
-                emoji: "🖤"
-            },
-            {
-                id: 2,
-                name: "Vaporesso XROS 3",
-                category: "Pod Kit",
-                desc: "Adjustable airflow, Type-C",
-                price: 3250,
-                color: "#0c2461",
-                emoji: "💙"
-            },
-            {
-                id: 3,
-                name: "OXVA Xlim Pro",
-                category: "Pod Kit",
-                desc: "0.96\" display, 1000mAh",
-                price: 3550,
-                color: "#4a148c",
-                emoji: "💜"
-            },
-            {
-                id: 4,
-                name: "RELX Infinity 2",
-                category: "Device",
-                desc: "Pre-filled pods, smooth draw",
-                price: 2050,
-                color: "#1a1a2e",
-                emoji: "⚫"
-            },
-            {
-                id: 5,
-                name: "Vgod SaltNic Dry Tobacco 30ml",
-                category: "E-Liquid",
-                desc: "Salt nicotine, 30mg/50mg",
-                price: 1550,
-                color: "#5d4037",
-                emoji: "🟤"
-            },
-            {
-                id: 6,
-                name: "Caliburn G3 Pods (4pcs)",
-                category: "Accessories",
-                desc: "0.6Ω / 0.9Ω replacement",
-                price: 1250,
-                color: "#37474f",
-                emoji: "⬛"
-            }
-        ];
-
-        let cart = JSON.parse(localStorage.getItem('sv_cart') || '[]');
-
-        // ============ RENDER ============
-        function renderProducts() {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = products.map(p => `
-                <div class="product-card">
-                    <div class="product-img" style="background:${p.color};">
-                        <span style="filter:grayscale(0.3);">${p.emoji}</span>
-                        <span class="coming-soon">photo coming soon</span>
-                    </div>
-                    <div class="product-body">
-                        <span class="product-tag">${p.category}</span>
-                        <div class="product-name">${p.name}</div>
-                        <div class="product-desc">${p.desc}</div>
-                        <div class="product-footer">
-                            <div class="product-price">৳${p.price.toLocaleString()} <small>BDT</small></div>
-                            <button class="add-btn" onclick="addToCart(${p.id})">+ Add</button>
-                        </div>
-                    </div>
+    <!-- Order Confirmation Modal (Issue 3.3: Solves Cart Wipe & Mobile Popup Dropoff) -->
+    <div class="modal-overlay" id="confirmation-modal" role="dialog" aria-labelledby="confirm-modal-title">
+        <div class="modal">
+            <div class="modal-body" style="padding-top: 30px;">
+                <div class="order-success-icon">
+                    <i class="fa-solid fa-check"></i>
                 </div>
-            `).join('');
-        }
+                <h3 class="order-confirm-title" id="confirm-modal-title">অর্ডার রিকোয়েস্ট সফলভাবে তৈরি হয়েছে!</h3>
+                <p class="order-confirm-subtitle">
+                    অর্ডার রেফারেন্স: <strong id="confirm-order-id" style="color: var(--accent-cyan);">#SV-000000</strong>
+                </p>
 
-        // ============ CART ============
-        function addToCart(id) {
-            const p = products.find(x => x.id === id);
-            const existing = cart.find(x => x.id === id);
-            if (existing) existing.qty++;
-            else cart.push({ ...p, qty: 1 });
-            saveCart();
-            updateCartUI();
-            // open cart
-            openCartPanel();
-        }
+                <!-- Receipt Summary -->
+                <div class="order-receipt-card" id="confirm-order-details">
+                    <!-- Populated dynamically by app.js -->
+                </div>
 
-        function removeFromCart(id) {
-            cart = cart.filter(x => x.id !== id);
-            saveCart();
-            updateCartUI();
-        }
+                <!-- Next Steps Action Card -->
+                <div class="order-steps-card">
+                    <h4><i class="fa-solid fa-list-check"></i> পরবর্তী করণীয়:</h4>
+                    <ol>
+                        <li>আপনার ফোনে WhatsApp ওপেন হয়েছে কি না চেক করুন। ওপেন না হলে নিচের সবুজ বাটনে ক্লিক করুন।</li>
+                        <li>উপরে উল্লেখিত পরিমাণ টাকা bKash এ <em>Send Money</em> করুন।</li>
+                        <li>WhatsApp চ্যাটে স্ক্রিনশট বা TrxID পাঠিয়ে দিন। ব্যাস, আপনার পার্সেল প্যাক করে বুকিং দিয়ে দেওয়া হবে!</li>
+                    </ol>
+                </div>
 
-        function changeQty(id, d) {
-            const item = cart.find(x => x.id === id);
-            if (!item) return;
-            item.qty += d;
-            if (item.qty <= 0) return removeFromCart(id);
-            saveCart();
-            updateCartUI();
-        }
+                <div class="modal-actions-stacked">
+                    <button class="wa-checkout-btn" id="confirm-reopen-wa">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        Re-open WhatsApp Chat
+                    </button>
+                    <button class="btn-secondary" id="confirm-clear-cart">
+                        <i class="fa-solid fa-check-double"></i> Complete Order & Clear Bag
+                    </button>
+                    <button class="btn-secondary btn-outline-danger" id="confirm-keep-cart">
+                        <i class="fa-solid fa-arrow-left"></i> Keep Bag & Back to Store
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function saveCart() {
-            localStorage.setItem('sv_cart', JSON.stringify(cart));
-        }
+    <!-- Age Verification Gate (Issue 4.3) -->
+    <div class="age-gate-overlay" id="age-gate-modal" role="alertdialog" aria-modal="true" aria-labelledby="age-gate-title">
+        <div class="age-gate-card">
+            <div class="age-shield-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 id="age-gate-title">Age Verification (18+)</h2>
+            <div class="sub-title">বয়স নিশ্চিতকরণ ও আইনগত নোটিশ</div>
+            
+            <p>
+                You must be at least <strong>18 years of age</strong> to enter this website and purchase electronic nicotine delivery systems (ENDS) or vaping accessories.
+            </p>
+            <p class="bilingual-warning">
+                এই ওয়েবসাইটে প্রবেশ এবং পণ্য কেনার জন্য আপনার বয়স ১৮ বছর বা তার বেশি হতে হবে। অপ্রাপ্তবয়স্কদের কাছে নিকোটিন পণ্য বিক্রি সম্পূর্ণ নিষিদ্ধ।
+            </p>
 
-        function getTotal() {
-            return cart.reduce((s, i) => s + i.price * i.qty, 0);
-        }
+            <button class="age-btn-primary" id="age-confirm-btn">
+                <i class="fa-solid fa-circle-check"></i> I am 18 or Older / আমার বয়স ১৮ বা বেশি
+            </button>
+            <button class="age-btn-secondary" id="age-under-btn">
+                I am Under 18 / ১৮ বছরের কম (Exit)
+            </button>
+        </div>
+    </div>
 
-        function updateCartUI() {
-            const badge = document.getElementById('cart-badge');
-            const body = document.getElementById('cart-body');
-            const empty = document.getElementById('cart-empty');
-            const totalEl = document.getElementById('cart-total');
-            const btn = document.getElementById('checkout-btn');
+    <!-- Scripts (Decoupled Architecture) -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
 
-            const count = cart.reduce((s, i) => s + i.qty, 0);
-            badge.textContent = count;
-            badge.dataset.count = count;
-            badge.style.display = count > 0 ? 'flex' : 'none';
-
-            // pulse animation
-            badge.classList.remove('pulse');
-            void badge.offsetWidth;
-            badge.classList.add('pulse');
-
-            totalEl.textContent = `৳${getTotal().toLocaleString()}`;
-            btn.disabled = cart.length === 0;
-
-            // clear items (keep empty msg)
-            body.querySelectorAll('.cart-item').forEach(el => el.remove());
-
-            if (cart.length === 0) {
-                empty.style.display = 'block';
-            } else {
-                empty.style.display = 'none';
-                cart.forEach(item => {
-                    const el = document.createElement('div');
-                    el.className = 'cart-item';
-                    el.innerHTML = `
-                        <div class="cart-item-color" style="background:${item.color};border-radius:8px;"></div>
-                        <div class="cart-item-info">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-price">৳${(item.price * item.qty).toLocaleString()}</div>
-                        </div>
-                        <div class="cart-item-controls">
-                            <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-                            <span class="qty-val">${item.qty}</span>
-                            <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
-                        </div>
-                        <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Remove"><i class="fa-solid fa-trash-can"></i></button>
-                    `;
-                    body.appendChild(el);
-                });
-            }
-        }
-
-        // ============ CART PANEL ============
-        function openCartPanel() {
-            document.getElementById('cart-overlay').classList.add('open');
-            document.getElementById('cart-panel').classList.add('open');
-        }
-        function toggleCart() {
-            const overlay = document.getElementById('cart-overlay');
-            const panel = document.getElementById('cart-panel');
-            if (panel.classList.contains('open')) {
-                overlay.classList.remove('open');
-                panel.classList.remove('open');
-            } else {
-                openCartPanel();
-            }
-        }
-
-        // ============ CHECKOUT ============
-        function openCheckout() {
-            if (cart.length === 0) return;
-            toggleCart(); // close cart
-            document.getElementById('modal-total').textContent = `৳${getTotal().toLocaleString()}`;
-            document.getElementById('checkout-modal').classList.add('open');
-        }
-
-        function closeCheckout() {
-            document.getElementById('checkout-modal').classList.remove('open');
-        }
-
-        function submitOrder() {
-            const name = document.getElementById('f-name').value.trim();
-            const phone = document.getElementById('f-phone').value.trim();
-            const address = document.getElementById('f-address').value.trim();
-
-            if (!name || !phone || !address) {
-                alert('Please fill in all fields / সব তথ্য দিন');
-                return;
-            }
-
-            let msg = `*নতুন অর্ডার — Safwan's Vape Shop*\n\n`;
-            msg += `👤 *Customer:* ${name}\n`;
-            msg += `📞 *Phone:* ${phone}\n`;
-            msg += `📍 *Address:* ${address}\n\n`;
-            msg += `📦 *Items:*\n`;
-
-            cart.forEach(item => {
-                msg += `• ${item.qty}x ${item.name} — ৳${(item.price * item.qty).toLocaleString()}\n`;
-            });
-
-            const total = getTotal();
-            msg += `\n💰 *Total:* ৳${total.toLocaleString()}\n`;
-            msg += `🚚 *Delivery:* Pathao (চার্জ আলাদা)\n\n`;
-            msg += `আমি ৳${total.toLocaleString()} bKash এ Send Money করেছি।\n`;
-            msg += `*Screenshot / TrxID এই মেসেজের সাথে attach করছি।*`;
-
-            const encoded = encodeURIComponent(msg);
-            const waNumber = "8801327045005"; // Abrar's WhatsApp (Order router)
-
-            cart = [];
-            saveCart();
-            updateCartUI();
-            closeCheckout();
-
-            window.open(`https://wa.me/${waNumber}?text=${encoded}`, '_blank');
-        }
-
-        // ============ INIT ============
-        renderProducts();
-        updateCartUI();
-    </script>
 </body>
 </html>
